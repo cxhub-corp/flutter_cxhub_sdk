@@ -1,0 +1,27 @@
+name: cxhub_ios
+description: "A new Flutter plugin project."
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+  flutter: '>=3.3.0'
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: CxHubSdkPlatformIos
+        dartPluginClass: CxHubSdkPlatformIos
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cxhub_platform_interface:
+    path: ../cxhub_platform_interface
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

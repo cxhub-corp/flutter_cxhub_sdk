@@ -1,0 +1,31 @@
+name: cxhub_sdk
+description: "CxHub SDK library"
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+  flutter: '>=3.3.0'
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        default_package: cxhub_android
+      ios:
+        default_package: cxhub_ios
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cxhub_platform_interface:
+    path: ../cxhub_platform_interface
+  cxhub_android:
+    path: ../cxhub_android_firebase
+  cxhub_ios:
+    path: ../cxhub_ios
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

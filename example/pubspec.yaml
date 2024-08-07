@@ -1,0 +1,28 @@
+name: cxhub_sdk_example
+description: "Demonstrates how to use the cxhub_sdk plugin."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cxhub_sdk:
+    path: ../cxhub_sdk
+  cupertino_icons: ^1.0.6
+
+# uncomment this to switch to huawei implementation
+#dependency_overrides:
+#  cxhub_android:
+#    path: ../cxhub_android_huawei
+
+dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
