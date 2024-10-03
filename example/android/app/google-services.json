@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "491088403796",
+    "project_id": "android-libnotify-app",
+    "storage_bucket": "android-libnotify-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491088403796:android:e64fa137853c13bec0fcc1",
+        "android_client_info": {
+          "package_name": "ru.mail.android_libnotify_app_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "491088403796-3hh6t95c046n1bagm43b0jokqgdeb0l2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.mail.android_libnotify_app_test",
+            "certificate_hash": "0e275588a71768e37458356e884dfb403c534350"
+          }
+        },
+        {
+          "client_id": "491088403796-2b7tk35acnjmqqvguvuubss6ovfhc3ti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL7tgAw49WIfR1I0oa3yrz1Bya6B71nes"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "491088403796-2b7tk35acnjmqqvguvuubss6ovfhc3ti.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

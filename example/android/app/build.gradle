@@ -23,23 +23,29 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
-android {
-    namespace = "plugin.cxhub_sdk_example"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+android {
+    namespace = "com.vk.cxhub"
+    compileSdk = localProperties.getProperty("flutter.compileSdkVersion").toInteger()
+    ndkVersion = localProperties.getProperty("flutter.ndkVersion")
+
+    kotlinOptions{
+        jvmTarget = "17"
+    }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
     }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "plugin.cxhub_sdk_example"
+        applicationId = "com.vk.cxhub.flutter_sdk_test"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = localProperties.getProperty("flutter.minSdkVersion").toInteger() //flutter.minSdkVersion
+        targetSdk = localProperties.getProperty("flutter.targetSdkVersion").toInteger()
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
