@@ -43,6 +43,6 @@ class CxHubSdk {
   static Future setUserProperties(Map<String, String> properties) =>
       CxHubSdkPlatform.instance.setUserProperties(properties);
 
-  static Future collectEvent(String key, String value, Map<String, String> properties, bool deliverImmediately) =>
-      CxHubSdkPlatform.instance.collectEvent(key, value: value, properties: properties, deliverImmediately: deliverImmediately);
+  static Future collectEvent(String key, {String? value, Map<String, String>? properties, bool deliverImmediately = false}) =>
+      CxHubSdkPlatform.instance.collectEvent(key, value, properties, deliverImmediately);
 }
