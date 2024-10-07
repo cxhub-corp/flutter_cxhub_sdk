@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cxhub_resource_icon_id">drawable/ic_message</string>
-    <string name="cxhub_integration_id" translatable="false">ad723093-64d3-456b-bf92-ac1435ce288a</string>
+    <string name="cxhub_integration_id" translatable="false">7315ce73-51b8-42db-9c68-0817a7c74c93</string>
     <string name="cxhub_application_secret" translatable="false">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoibW9iaWxlIiwicHJvamVjdF9uYW1lIjoiZGV2MWJveDY3NzQtcHJvamVjdCJ9.vXPa8Gc_nQyrXUT7ngpMsptd6OHqYhb-QyDT52KJiaQ</string>
-    <string name="cxhub_api_host" translatable="false">https://box3-project.stage.cxhub.ru/callback-service/</string>
+    <string name="cxhub_api_host" translatable="false">https://dev1box6774-project.dev.apicxhub.ru/callback-service/</string>
     <bool name="cxhub_trust_all_certificates">true</bool>
 </resources>

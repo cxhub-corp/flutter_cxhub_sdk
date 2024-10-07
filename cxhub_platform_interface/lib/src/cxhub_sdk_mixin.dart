@@ -29,15 +29,14 @@ mixin CxHubSdkMixin {
   Stream<String?> subscribeToPushToken() {
     if (_pushController == null) {
       _pushController = StreamController<String>();
+      _pushController!.onCancel = () {
+        methodChannel.invokeMethod('unsubscribeToPushToken');
+        _pushController = null;
+      };
       methodChannel.invokeMethod('subscribeToPushToken');
     }
 
     return _pushController!.stream;
-  }
-
-  Future unsubscribeToPushToken() async {
-    methodChannel.invokeMethod('unsubscribeToPushToken');
-    _pushController = null;
   }
 
   Future<MapEntry<String, String>?> getUserId() {
@@ -70,11 +69,11 @@ mixin CxHubSdkMixin {
   }
 
   Future collectEvent(
-    String key, {
+    String key,
     String? value,
     Map<String, String>? properties,
-    bool deliverImmediately = false,
-  }) =>
+    bool deliverImmediately,
+  ) =>
       methodChannel.invokeMethod(
         'setUserId',
         {
