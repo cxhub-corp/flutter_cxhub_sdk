@@ -1,15 +1,12 @@
-group = "plugin.cxhub_sdk"
-version = "1.0-SNAPSHOT"
-
 buildscript {
-    ext.kotlin_version = "1.7.10"
+    ext.kotlin_version = "1.9.22"
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.3.0")
+        classpath("com.android.tools.build:gradle:8.4.2")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
@@ -31,13 +28,14 @@ android {
 
     compileSdk = 34
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
     }
 
     sourceSets {
@@ -46,12 +44,15 @@ android {
     }
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
     }
 
     dependencies {
+        implementation("com.google.firebase:firebase-messaging:24.0.2")
+        implementation("ru.mail.libnotify:cxhub-firebase:0.0.1")
+        implementation("ru.mail.libnotify:cxhub-sdk:0.0.1")
         testImplementation("org.jetbrains.kotlin:kotlin-test")
-        testImplementation("org.mockito:mockito-core:5.0.0")
+        testImplementation("org.mockito:mockito-core:5.12.0")
     }
 
     testOptions {

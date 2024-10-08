@@ -17,7 +17,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  final _cxHubSdkPlugin = CxHubSdk.instance;
 
   @override
   void initState() {
@@ -28,8 +27,11 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     String platformVersion;
     try {
-      platformVersion =
-          await _cxHubSdkPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      platformVersion = await CxHubSdk.getPlatformVersion() ?? 'Unknown platform version';
+      debugPrint(platformVersion);
+      await CxHubSdk.setUserId("Phone", "5555555");
+      final userId = await CxHubSdk.getUserId();
+      debugPrint("userIdType: ${userId?.key}, userIdValue: ${userId?.value}");
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
