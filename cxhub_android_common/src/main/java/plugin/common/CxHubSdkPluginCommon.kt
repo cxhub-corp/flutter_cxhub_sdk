@@ -23,6 +23,7 @@ class CxHubSdkPluginCommon(
 ) : MethodCallHandler {
     private val channel: MethodChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "cxhub_sdk")
     private val context: Context = flutterPluginBinding.applicationContext
+    private val platform: String = manager.name
 
     init {
         channel.setMethodCallHandler(this)
@@ -45,7 +46,7 @@ class CxHubSdkPluginCommon(
     override fun onMethodCall(call: MethodCall, result: Result) {
         try {
             val api = NotificationFactory.get(context)
-            val version = "Android ${android.os.Build.VERSION.RELEASE} firebase impl\nmobileId: ${api.mobileInstance}"
+            val version = "Android ${android.os.Build.VERSION.RELEASE} $platform impl\nmobileId: ${api.mobileInstance}"
 
             when (call.method) {
                 "getPlatformVersion" -> result.success(version)
