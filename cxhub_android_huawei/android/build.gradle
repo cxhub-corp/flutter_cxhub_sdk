@@ -51,10 +51,16 @@ android {
         minSdk = 23
     }
 
-    useAndroidX=true
-    enableJetifier=true
-
     dependencies {
+        implementation("com.huawei.hms:base:6.11.0.300")
+        implementation("com.huawei.hms:push:6.11.0.300")
+        implementation("com.huawei.agconnect:agconnect-core:1.9.1.302")
+
+        implementation("ru.mail.libnotify:cxhub-huawei:0.0.1")
+        implementation("ru.mail.libnotify:cxhub-sdk:0.0.1")
+
+        implementation project(":cxhub_android_common")
+
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.12.0")
     }

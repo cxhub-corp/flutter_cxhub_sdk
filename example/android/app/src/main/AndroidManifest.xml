@@ -4,7 +4,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
-            android:name="com.vk.cxhub.flutter_sdk_test.MainActivity"
+            android:name="ru.mail.android_libnotify_app_test.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""

@@ -1,0 +1,28 @@
+name: cxhub_android
+description: "Android RuStore implementation cxhub_sdk"
+version: 0.0.1
+publish_to: 'none'
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+  flutter: '>=3.3.0'
+
+flutter:
+  plugin:
+    implements: cxhub_sdk
+    platforms:
+      android:
+        package: plugin.cxhub_sdk
+        pluginClass: CxHubSdkPluginRuStore
+        dartPluginClass: CxHubSdkPlatformAndroid
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cxhub_platform_interface:
+    path: ../cxhub_platform_interface
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

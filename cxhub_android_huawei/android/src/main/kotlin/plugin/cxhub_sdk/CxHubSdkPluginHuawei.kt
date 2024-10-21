@@ -1,29 +1,19 @@
 package plugin.cxhub_sdk
 
+import cxhub.api.HuaweiPlatformManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
+import plugin.common.CxHubSdkPluginCommon
 
 /** CxhubSdkPlugin */
-class CxHubSdkPluginHuawei: FlutterPlugin, MethodCallHandler {
-  private lateinit var channel : MethodChannel
+class CxHubSdkPluginHuawei : FlutterPlugin {
+  private lateinit var pluginCommon: CxHubSdkPluginCommon
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "cxhub_sdk")
-    channel.setMethodCallHandler(this)
+    pluginCommon = CxHubSdkPluginCommon(flutterPluginBinding, HuaweiPlatformManager.getInstance())
   }
 
-  override fun onMethodCall(call: MethodCall, result: Result) {
-    if (call.method == "getPlatformVersion") {
-      result.success("Android ${android.os.Build.VERSION.RELEASE} huawei impl")
-    } else {
-      result.notImplemented()
-    }
-  }
 
   override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    channel.setMethodCallHandler(null)
+    pluginCommon.dispose()
   }
 }

@@ -50,9 +50,9 @@ packages:
     source: hosted
     version: "1.0.8"
   cxhub_android:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      path: "../cxhub_android_firebase"
+      path: "../cxhub_android_rustore"
       relative: true
     source: path
     version: "0.0.1"
