@@ -15,7 +15,7 @@ dependencies:
 # Uncomment this to switch to huawei implementation
 dependency_overrides:
   cxhub_android:
-    path: ../cxhub_android_huawei
+    path: ../cxhub_android_rustore
 
 dev_dependencies:
   integration_test:

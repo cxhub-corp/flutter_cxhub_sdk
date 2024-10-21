@@ -1,0 +1,72 @@
+buildscript {
+    ext.kotlin_version = "1.9.22"
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.4.2")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+    if (project.android.hasProperty("namespace")) {
+        namespace = "plugin.cxhub_sdk"
+    }
+
+    compileSdk = 34
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+    }
+
+    defaultConfig {
+        minSdk = 23
+    }
+
+    dependencies {
+        implementation("ru.rustore.sdk:pushclient:2.0.0")
+        implementation("ru.mail.libnotify:cxhub-rustore:0.0.1")
+        implementation("ru.mail.libnotify:cxhub-sdk:0.0.1")
+
+        implementation project(":cxhub_android_common")
+
+        testImplementation("org.jetbrains.kotlin:kotlin-test")
+        testImplementation("org.mockito:mockito-core:5.12.0")
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+
+            testLogging {
+               events "passed", "skipped", "failed", "standardOut", "standardError"
+               outputs.upToDateWhen {false}
+               showStandardStreams = true
+            }
+        }
+    }
+}

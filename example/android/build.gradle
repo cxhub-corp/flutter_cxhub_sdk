@@ -6,6 +6,9 @@ buildscript {
         maven{
             url "https://developer.huawei.com/repo/"
         }
+        maven {
+            url "https://artifactory-external.vkpartner.ru/artifactory/maven"
+        }
     }
 
     dependencies {
@@ -25,6 +28,9 @@ allprojects {
         }
         maven{
             url "https://developer.huawei.com/repo/"
+        }
+        maven {
+            url "https://artifactory-external.vkpartner.ru/artifactory/maven"
         }
     }
 }

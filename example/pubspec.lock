@@ -52,7 +52,7 @@ packages:
   cxhub_android:
     dependency: "direct overridden"
     description:
-      path: "../cxhub_android_huawei"
+      path: "../cxhub_android_rustore"
       relative: true
     source: path
     version: "0.0.1"
