@@ -1,6 +1,6 @@
 name: cxhub_android
 description: "Android firebase implementation cxhub_sdk"
-version: 0.0.1
+version: 0.0.1-huawei
 publish_to: 'none'
 
 environment:

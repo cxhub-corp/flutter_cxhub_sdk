@@ -12,10 +12,10 @@ dependencies:
     path: ../cxhub_sdk
   cupertino_icons: ^1.0.6
 
-# Uncomment this to switch to huawei implementation
-dependency_overrides:
-  cxhub_android:
-    path: ../cxhub_android_rustore
+## Uncomment this to switch to huawei implementation
+#dependency_overrides:
+#  cxhub_android:
+#    path: ../cxhub_android_rustore
 
 dev_dependencies:
   integration_test:

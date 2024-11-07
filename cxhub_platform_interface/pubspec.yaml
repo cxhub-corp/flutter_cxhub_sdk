@@ -1,6 +1,6 @@
 name: cxhub_platform_interface
 description: "A common interface for cxhub_sdk"
-version: 0.0.1
+version: 0.0.1-rustore
 publish_to: 'none'
 
 environment:
