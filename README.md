@@ -14,7 +14,6 @@
 Состав:
  - cxhub_sdk - сама библиотека
  - cxhub_platform_interface - общий платформенный интерфейс (dart)
- - cxhub_android_common - андроид-модуль общей части для всех трех способов доставки пушей
  - cxhub_android_firebase - имплементация андроид с firebase 
  - cxhub_android_huawei - имплементация андроид с huawei
  - cxhub_android_rustore - имплементация андроид с rustore

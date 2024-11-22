@@ -1,4 +1,4 @@
-package plugin.common
+package plugin.cxhub_sdk
 
 import android.content.Context
 import android.util.Log

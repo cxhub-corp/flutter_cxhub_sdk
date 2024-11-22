@@ -22,5 +22,4 @@ plugins {
     id "org.jetbrains.kotlin.android" version "1.9.22" apply false
 }
 
-include ":app", ":cxhub_android_common"
-project(':cxhub_android_common').projectDir = new File('../../cxhub_android_common')
+include ":app"

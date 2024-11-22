@@ -1,9 +1,10 @@
-package plugin.common
+package plugin.cxhub_sdk
 
 import android.content.Context
 import android.util.Log
 import core.api.BackgroundAwakeMode
 import core.api.NetworkSyncMode
+import core.utils.json.JsonParser
 import cxhub.api.NotificationApi.PushTokenListener
 import cxhub.api.NotificationFactory
 import cxhub.api.PlatformManager
@@ -65,7 +66,7 @@ class CxHubSdkPluginCommon(
                     }
 
                     // чтобы отработать асинк мы возвращаем успех сразу,
-                    // потом лисенер дернет инвок и мы получим результат по каналу
+                    // потом лисенер дернет инвок и мы получим результат, но не как результат вызова, а как вызов
                     result.success(true)
                 }
 

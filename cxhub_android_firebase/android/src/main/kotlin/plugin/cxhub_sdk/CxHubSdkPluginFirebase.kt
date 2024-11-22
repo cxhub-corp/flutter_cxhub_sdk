@@ -2,7 +2,7 @@ package plugin.cxhub_sdk
 
 import cxhub.api.FirebasePlatformManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import plugin.cxhub_sdk.common.CxHubSdkPluginCommon
+import plugin.cxhub_sdk.CxHubSdkPluginCommon
 
 /** CxhubSdkPlugin */
 class CxHubSdkPluginFirebase : FlutterPlugin {

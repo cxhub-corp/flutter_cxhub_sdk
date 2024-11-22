@@ -52,8 +52,6 @@ android {
         implementation("ru.mail.libnotify:cxhub-rustore:0.0.1")
         implementation("ru.mail.libnotify:cxhub-sdk:0.0.1")
 
-        implementation project(":cxhub_android_common")
-
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.12.0")
     }

@@ -102,7 +102,7 @@ mixin CxHubSdkMixin {
         }
         break;
 
-      case 'emitPushIdSub':
+      case 'emitPushTokenSub':
         _pushController?.add(call.arguments);
         break;
 
