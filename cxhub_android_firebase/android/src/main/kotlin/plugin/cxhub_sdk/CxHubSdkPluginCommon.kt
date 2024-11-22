@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import core.api.BackgroundAwakeMode
 import core.api.NetworkSyncMode
-import core.utils.json.JsonParser
 import cxhub.api.NotificationApi.PushTokenListener
 import cxhub.api.NotificationFactory
 import cxhub.api.PlatformManager
@@ -145,7 +144,7 @@ class CxHubSdkPluginCommon(
                         }
                     }
 
-                    api.setUserProperty(map.entries.map { UserProperty(it.key, it.value) } as MutableList, listener)
+                    api.setUserProperty(map.entries.map { UserProperty(it.key, it.value) }, listener)
                     result.success(true)
                 }
 

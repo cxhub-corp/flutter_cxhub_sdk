@@ -63,7 +63,7 @@ mixin CxHubSdkMixin {
     Map<String, String> properties,
   ) {
     _setUserPropsCompleter ??= Completer();
-    methodChannel.invokeMethod('setUserId', properties);
+    methodChannel.invokeMethod('setUserProperties', properties);
 
     return _setUserPropsCompleter!.future;
   }
@@ -75,7 +75,7 @@ mixin CxHubSdkMixin {
     bool deliverImmediately,
   ) =>
       methodChannel.invokeMethod(
-        'setUserId',
+        'collectEvent',
         {
           'key': key,
           'value': value,
@@ -86,7 +86,7 @@ mixin CxHubSdkMixin {
 
   Future _handlePlatformInvokes(MethodCall call) async {
     switch (call.method) {
-      case 'emitPushId':
+      case 'emitPushToken':
         _pushCompleter?.complete(call.arguments);
         _pushCompleter = null;
         break;

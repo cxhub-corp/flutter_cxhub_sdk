@@ -49,8 +49,9 @@ android {
 
     dependencies {
         implementation("ru.rustore.sdk:pushclient:2.0.0")
-        implementation("ru.mail.libnotify:cxhub-rustore:0.0.1")
-        implementation("ru.mail.libnotify:cxhub-sdk:0.0.1")
+        
+        implementation("ru.mail.libnotify:cxhub-rustore:0.1.0")
+        implementation("ru.mail.libnotify:cxhub-sdk:0.1.0")
 
         testImplementation("org.jetbrains.kotlin:kotlin-test")
         testImplementation("org.mockito:mockito-core:5.12.0")

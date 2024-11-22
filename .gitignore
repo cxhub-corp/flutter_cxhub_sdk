@@ -28,6 +28,7 @@ migrate_working_dir/
 .dart_tool/
 build/
 /.local/
-/example/android/app/src/main/res/cxhub.xml
 /example/android/app/src/agconnect-services.json
 /example/android/app/src/google-services.json
+/example/android/app/src/main/res/values/cxhub.xml
+/example/android/app/local.properties

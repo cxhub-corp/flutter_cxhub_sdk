@@ -79,7 +79,7 @@ class _PropertyFieldState extends State<PropertyField> {
                         borderRadius: BorderRadius.all(Radius.circular(16.0)),
                       ),
                       padding: const EdgeInsets.all(8),
-                      onPressed: widget.action?.call(_dropdownValue, _controller.text),
+                      onPressed: ()=> widget.action?.call(_dropdownValue, _controller.text),
                       child: Text(widget.actionName!),
                     ),
                   )

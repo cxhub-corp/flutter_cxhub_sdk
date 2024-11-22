@@ -1,4 +1,4 @@
-package com.vk.cxhub.flutter_sdk_test
+package ru.cxhub.example
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -14,59 +14,61 @@ class MainScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('CxHubSDK Example App'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          FutureBuilder(
-            future: CxHubSdk.getMobileInstance(),
-            builder: (context, mobileId) => SimpleField(
-              name: "MobileId",
-              actionName: "Copy",
-              action: () => Clipboard.setData(ClipboardData(text: mobileId.data ?? "")),
-              child: Text(
-                overflow: TextOverflow.ellipsis,
-                mobileId.data ?? "",
-                style: const TextStyle(fontSize: 16),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            FutureBuilder(
+              future: CxHubSdk.getMobileInstance(),
+              builder: (context, mobileId) => SimpleField(
+                name: "MobileId",
+                actionName: "Copy",
+                action: () => Clipboard.setData(ClipboardData(text: mobileId.data ?? "")),
+                child: Text(
+                  overflow: TextOverflow.ellipsis,
+                  mobileId.data ?? "",
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
             ),
-          ),
-          StreamBuilder(
-            stream: CxHubSdk.subscribeToPushToken(),
-            builder: (context, pushToken) => SimpleField(
-              name: "Push token",
-              actionName: "Copy",
-              action: () => Clipboard.setData(ClipboardData(text: pushToken.data ?? "")),
-              child: Text(
-                overflow: TextOverflow.ellipsis,
-                pushToken.data ?? "",
-                style: const TextStyle(fontSize: 16),
+            StreamBuilder(
+              stream: CxHubSdk.subscribeToPushToken(),
+              builder: (context, pushToken) => SimpleField(
+                name: "Push token",
+                actionName: "Copy",
+                action: () => Clipboard.setData(ClipboardData(text: pushToken.data ?? "")),
+                child: Text(
+                  overflow: TextOverflow.ellipsis,
+                  pushToken.data ?? "",
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
             ),
-          ),
-          LoginField(
-            name: "UserId (Phone)",
-            actionName: "Send",
-            initial: CxHubSdk.getUserId(),
-            action: (phone) {
-              CxHubSdk.setUserId("Phone", phone);
-            },
-          ),
-          PropertyField(
-            name: "User property",
-            actionName: "Send",
-            action: (type, value) {
-              CxHubSdk.setUserProperties({type: value});
-            },
-            types: const {
-              "Email": "Email",
-              "City": "City",
-              "FirstName": "FirstName",
-              "MiddleName": "MiddleName",
-              "LastName": "LastName",
-            },
-          ),
-        ],
+            LoginField(
+              name: "UserId (Phone)",
+              actionName: "Send",
+              initial: CxHubSdk.getUserId(),
+              action: (phone) {
+                CxHubSdk.setUserId("Phone", phone);
+              },
+            ),
+            PropertyField(
+              name: "User property",
+              actionName: "Send",
+              action: (type, value) {
+                CxHubSdk.setUserProperties({type: value});
+              },
+              types: const {
+                "Email": "Email",
+                "City": "City",
+                "FirstName": "FirstName",
+                "MiddleName": "MiddleName",
+                "LastName": "LastName",
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
