@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cxhub_sdk/cxhub_sdk.dart';
 import 'package:cxhub_sdk_example/widgets/login_field.dart';
 import 'package:cxhub_sdk_example/widgets/property_field.dart';
@@ -20,37 +22,39 @@ class MainScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             FutureBuilder(
-              future: CxHubSdk.getMobileInstance().catchError((e) async{
+              future: CxHubSdk.getMobileInstance().catchError((e) async {
                 debugPrint("getMobileInstance error $e");
                 return "ERROR";
               }),
-              builder: (context, mobileId) =>
-                  SimpleField(
-                    name: "MobileId",
-                    actionName: "Copy",
-                    action: () => Clipboard.setData(ClipboardData(text: mobileId.data ?? "")),
-                    child: Text(
-                      overflow: TextOverflow.ellipsis,
-                      mobileId.data ?? "",
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
+              builder: (context, mobileId) => SimpleField(
+                name: "MobileId",
+                actionName: "Copy",
+                action: () => Clipboard.setData(ClipboardData(text: mobileId.data ?? "")),
+                child: Text(
+                  overflow: TextOverflow.ellipsis,
+                  mobileId.data ?? "",
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
             ),
             StreamBuilder(
-              stream: CxHubSdk.subscribeToPushToken().handleError((e) {
-                debugPrint("subscribeToPushToken error $e");
-              }),
-              builder: (context, pushToken) =>
-                  SimpleField(
-                    name: "Push token",
-                    actionName: "Copy",
-                    action: () => Clipboard.setData(ClipboardData(text: pushToken.data ?? "")),
-                    child: Text(
-                      overflow: TextOverflow.ellipsis,
-                      pushToken.data ?? "",
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
+              stream: CxHubSdk.subscribeToPushToken().transform(StreamTransformer<String, String>.fromHandlers(
+                handleData: (data, sink) => sink.add(data),
+                handleError: (e, s, sink) {
+                  debugPrint("subscribeToPushToken error $e");
+                  sink.add("ERROR");
+                },
+              )),
+              builder: (context, pushToken) => SimpleField(
+                name: "Push token",
+                actionName: "Copy",
+                action: () => Clipboard.setData(ClipboardData(text: pushToken.data ?? "")),
+                child: Text(
+                  overflow: TextOverflow.ellipsis,
+                  pushToken.data ?? "",
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
             ),
             LoginField(
               name: "UserId (Phone)",
