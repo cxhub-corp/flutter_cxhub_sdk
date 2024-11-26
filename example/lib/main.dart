@@ -1,8 +1,10 @@
+import 'package:cxhub_sdk/cxhub_sdk.dart';
 import 'package:cxhub_sdk_example/main_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  CxHubSdk.init();
   runApp(const MyApp());
 }
 

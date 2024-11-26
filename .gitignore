@@ -32,3 +32,7 @@ build/
 /example/android/app/src/google-services.json
 /example/android/app/src/main/res/values/cxhub.xml
 /example/android/app/local.properties
+/cxhub_android_rustore/android/gradlew
+/cxhub_android_rustore/android/gradlew.bat
+/cxhub_android_rustore/android/gradle/wrapper/gradle-wrapper.jar
+/cxhub_android_rustore/android/gradle/wrapper/gradle-wrapper.properties

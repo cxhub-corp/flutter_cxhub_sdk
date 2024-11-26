@@ -25,6 +25,8 @@ class CxHubSdk {
     return _instance!;
   }
 
+  static void init({String? param}) => CxHubSdkPlatform.instance.init(param: param);
+
   static Future<String?> getPlatformVersion() => CxHubSdkPlatform.instance.getPlatformVersion();
 
   static Future<String?> getMobileInstance() => CxHubSdkPlatform.instance.getMobileInstance();

@@ -20,44 +20,58 @@ class MainScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             FutureBuilder(
-              future: CxHubSdk.getMobileInstance(),
-              builder: (context, mobileId) => SimpleField(
-                name: "MobileId",
-                actionName: "Copy",
-                action: () => Clipboard.setData(ClipboardData(text: mobileId.data ?? "")),
-                child: Text(
-                  overflow: TextOverflow.ellipsis,
-                  mobileId.data ?? "",
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
+              future: CxHubSdk.getMobileInstance().catchError((e) async{
+                debugPrint("getMobileInstance error $e");
+                return "ERROR";
+              }),
+              builder: (context, mobileId) =>
+                  SimpleField(
+                    name: "MobileId",
+                    actionName: "Copy",
+                    action: () => Clipboard.setData(ClipboardData(text: mobileId.data ?? "")),
+                    child: Text(
+                      overflow: TextOverflow.ellipsis,
+                      mobileId.data ?? "",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
             ),
             StreamBuilder(
-              stream: CxHubSdk.subscribeToPushToken(),
-              builder: (context, pushToken) => SimpleField(
-                name: "Push token",
-                actionName: "Copy",
-                action: () => Clipboard.setData(ClipboardData(text: pushToken.data ?? "")),
-                child: Text(
-                  overflow: TextOverflow.ellipsis,
-                  pushToken.data ?? "",
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
+              stream: CxHubSdk.subscribeToPushToken().handleError((e) {
+                debugPrint("subscribeToPushToken error $e");
+              }),
+              builder: (context, pushToken) =>
+                  SimpleField(
+                    name: "Push token",
+                    actionName: "Copy",
+                    action: () => Clipboard.setData(ClipboardData(text: pushToken.data ?? "")),
+                    child: Text(
+                      overflow: TextOverflow.ellipsis,
+                      pushToken.data ?? "",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
             ),
             LoginField(
               name: "UserId (Phone)",
               actionName: "Send",
-              initial: CxHubSdk.getUserId(),
+              initial: CxHubSdk.getUserId().catchError((e) {
+                debugPrint("getUserId error $e");
+                return const MapEntry("ERROR", "ERROR");
+              }),
               action: (phone) {
-                CxHubSdk.setUserId("Phone", phone);
+                CxHubSdk.setUserId("Phone", phone).catchError((e) {
+                  debugPrint("setUserId error $e");
+                });
               },
             ),
             PropertyField(
               name: "User property",
               actionName: "Send",
               action: (type, value) {
-                CxHubSdk.setUserProperties({type: value});
+                CxHubSdk.setUserProperties({type: value}).catchError((e) {
+                  debugPrint("setUserProperties error $e");
+                });
               },
               types: const {
                 "Email": "Email",

@@ -14,6 +14,10 @@ abstract class CxHubSdkPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  void init({String? param}) {
+    throw UnimplementedError('init() has not been implemented.');
+  }
+
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }

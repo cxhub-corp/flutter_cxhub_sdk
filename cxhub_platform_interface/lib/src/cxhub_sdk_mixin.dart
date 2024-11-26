@@ -16,33 +16,52 @@ mixin CxHubSdkMixin {
   Completer<MapEntry<String, String>?>? _userIdCompleter;
   Completer? _setUserPropsCompleter;
 
+  void init({String? param}) {
+    methodChannel.invokeMethod('init', param);
+  }
+
   Future<String?> getPlatformVersion() => methodChannel.invokeMethod<String>('getPlatformVersion');
 
   Future<String?> getMobileInstance() => methodChannel.invokeMethod<String>('getMobileInstance');
 
   Future<String?> getPushToken() {
     _pushCompleter ??= Completer<String>();
-    methodChannel.invokeMethod('getPushToken');
-    return _pushCompleter!.future;
+    final future = _pushCompleter!.future;
+
+    methodChannel.invokeMethod('getPushToken').onError((e, s) {
+      _pushCompleter?.completeError(e!, s);
+      _pushCompleter = null;
+    });
+
+    return future;
   }
 
   Stream<String?> subscribeToPushToken() {
     if (_pushController == null) {
       _pushController = StreamController<String>();
       _pushController!.onCancel = () {
-        methodChannel.invokeMethod('unsubscribeToPushToken');
+        methodChannel.invokeMethod('unsubscribeToPushToken').ignore();
         _pushController = null;
       };
-      methodChannel.invokeMethod('subscribeToPushToken');
+      methodChannel.invokeMethod('subscribeToPushToken').onError((e, s) {
+        _pushController?.addError(e!, s);
+        _pushController = null;
+      });
     }
-
-    return _pushController!.stream;
+    final stream = _pushController!.stream;
+    return stream;
   }
 
   Future<MapEntry<String, String>?> getUserId() {
     _userIdCompleter ??= Completer<MapEntry<String, String>?>();
-    methodChannel.invokeMethod('getUserId');
-    return _userIdCompleter!.future;
+    final future = _userIdCompleter!.future;
+
+    methodChannel.invokeMethod('getUserId').onError((e, s) {
+      _userIdCompleter?.completeError(e!, s);
+      _userIdCompleter = null;
+    });
+
+    return future;
   }
 
   Future setUserId(
@@ -57,15 +76,17 @@ mixin CxHubSdkMixin {
           'idValue': userIdValue,
           'synchronous': synchronous,
         },
-      );
+      )..ignore();
 
-  Future setUserProperties(
-    Map<String, String> properties,
-  ) {
+  Future setUserProperties(Map<String, String> properties) {
     _setUserPropsCompleter ??= Completer();
-    methodChannel.invokeMethod('setUserProperties', properties);
+    final future = _setUserPropsCompleter!.future;
+    methodChannel.invokeMethod('setUserProperties', properties).onError((e, s) {
+      _setUserPropsCompleter?.completeError(e!, s);
+      _setUserPropsCompleter = null;
+    });
 
-    return _setUserPropsCompleter!.future;
+    return future;
   }
 
   Future collectEvent(
@@ -82,7 +103,7 @@ mixin CxHubSdkMixin {
           properties: properties,
           deliverImmediately: deliverImmediately,
         },
-      );
+      )..ignore();
 
   Future _handlePlatformInvokes(MethodCall call) async {
     switch (call.method) {

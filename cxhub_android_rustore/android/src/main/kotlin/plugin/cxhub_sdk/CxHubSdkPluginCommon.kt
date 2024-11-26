@@ -1,4 +1,4 @@
-package plugin.common
+package plugin.cxhub_sdk
 
 import android.content.Context
 import android.util.Log
@@ -19,15 +19,18 @@ import kotlinx.coroutines.launch
 
 class CxHubSdkPluginCommon(
     flutterPluginBinding: FlutterPluginBinding,
-    manager: PlatformManager
+    val managerFactory: (String?) -> PlatformManager
 ) : MethodCallHandler {
     private val channel: MethodChannel = MethodChannel(flutterPluginBinding.binaryMessenger, "cxhub_sdk")
     private val context: Context = flutterPluginBinding.applicationContext
-    private val platform: String = manager.name
+    private var manager: PlatformManager? = null;
 
     init {
         channel.setMethodCallHandler(this)
+    }
 
+    fun initSdk(param: String?) {
+        manager = managerFactory.invoke(param)
         NotificationFactory.setPlatformManagers(manager)
         NotificationFactory.initialize(context)
         NotificationFactory.setBackgroundAwakeMode(BackgroundAwakeMode.DEFAULT)
@@ -42,14 +45,26 @@ class CxHubSdkPluginCommon(
 
     private var pushListener: PushTokenListener? = null
 
+
     @Suppress("UNCHECKED_CAST")
     override fun onMethodCall(call: MethodCall, result: Result) {
         try {
-            val api = NotificationFactory.get(context)
-            val version = "Android ${android.os.Build.VERSION.RELEASE} $platform impl\nmobileId: ${api.mobileInstance}"
+            if(manager == null && call.method != "init") {
+                result.error("001", "CxHubSdk not initialized! Run init() first!", null)
+                return
+            }
 
+            val api = NotificationFactory.get(context)
+            
             when (call.method) {
-                "getPlatformVersion" -> result.success(version)
+                "init" -> {
+                    initSdk(call.arguments?.toString())
+                }
+
+                "getPlatformVersion" -> {
+                    val version = "${manager?.name} impl"
+                    result.success(version)
+                }
 
                 "getMobileInstance" -> result.success(api.mobileInstance)
 
@@ -65,13 +80,13 @@ class CxHubSdkPluginCommon(
                     }
 
                     // чтобы отработать асинк мы возвращаем успех сразу,
-                    // потом лисенер дернет инвок и мы получим результат по каналу
+                    // потом лисенер дернет инвок и мы получим результат, но не как результат вызова, а как вызов
                     result.success(true)
                 }
 
                 "subscribeToPushToken" -> {
                     if (pushListener != null) {
-                        result.error("001", "Already listening to push token!", null)
+                        result.error("002", "Already listening to push token!", null)
                     } else {
                         pushListener = PushTokenListener {
                             MainScope().launch {
@@ -144,7 +159,7 @@ class CxHubSdkPluginCommon(
                         }
                     }
 
-                    api.setUserProperty(map.entries.map { UserProperty(it.key, it.value) } as MutableList, listener)
+                    api.setUserProperty(map.entries.map { UserProperty(it.key, it.value) }, listener)
                     result.success(true)
                 }
 
@@ -170,7 +185,7 @@ class CxHubSdkPluginCommon(
                 else -> result.notImplemented()
             }
         } catch (t: Throwable) {
-            result.error("002", t.message, t.cause?.message)
+            result.error("003", t.message, t.cause?.message)
         }
     }
 

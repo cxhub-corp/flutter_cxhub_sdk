@@ -6,14 +6,16 @@ import plugin.cxhub_sdk.CxHubSdkPluginCommon
 
 /** CxhubSdkPlugin */
 class CxHubSdkPluginHuawei : FlutterPlugin {
-  private lateinit var pluginCommon: CxHubSdkPluginCommon
+    private lateinit var pluginCommon: CxHubSdkPluginCommon
 
-  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    pluginCommon = CxHubSdkPluginCommon(flutterPluginBinding, HuaweiPlatformManager.getInstance())
-  }
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        pluginCommon = CxHubSdkPluginCommon(flutterPluginBinding) {
+            HuaweiPlatformManager.getInstance()
+        }
+    }
 
 
-  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
-    pluginCommon.dispose()
-  }
+    override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        pluginCommon.dispose()
+    }
 }
