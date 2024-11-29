@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:io' show Platform;
 
 import 'cxhub_sdk_platform.dart';
 
@@ -9,7 +11,8 @@ import 'cxhub_sdk_platform.dart';
 mixin CxHubSdkMixin {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  late final methodChannel = const MethodChannel('cxhub_sdk')..setMethodCallHandler(_handlePlatformInvokes);
+  late final methodChannel = const MethodChannel('cxhub_sdk')
+    ..setMethodCallHandler(_handlePlatformInvokes);
 
   StreamController<String?>? _pushController;
   Completer<String?>? _pushCompleter;
@@ -18,11 +21,18 @@ mixin CxHubSdkMixin {
 
   void init({String? param}) {
     methodChannel.invokeMethod('init', param);
+    if (Platform.isIOS) {
+      requestPushNotificationPermission().then((value) async {
+        registerDevice();
+      });
+    }
   }
 
-  Future<String?> getPlatformVersion() => methodChannel.invokeMethod<String>('getPlatformVersion');
+  Future<String?> getPlatformVersion() =>
+      methodChannel.invokeMethod<String>('getPlatformVersion');
 
-  Future<String?> getMobileInstance() => methodChannel.invokeMethod<String>('getMobileInstance');
+  Future<String?> getMobileInstance() =>
+      methodChannel.invokeMethod<String>('getMobileInstance');
 
   Future<String?> getPushToken() {
     _pushCompleter ??= Completer<String>();
@@ -118,7 +128,8 @@ mixin CxHubSdkMixin {
           _userIdCompleter = null;
         } else {
           final map = call.arguments as Map<dynamic, dynamic>;
-          _userIdCompleter?.complete(MapEntry(map['idType']! as String, map['idValue']! as String));
+          _userIdCompleter?.complete(
+              MapEntry(map['idType']! as String, map['idValue']! as String));
           _userIdCompleter = null;
         }
         break;
@@ -145,5 +156,54 @@ mixin CxHubSdkMixin {
     }
 
     return "success";
+  }
+
+  //iOS
+
+  Future<void> requestPushNotificationPermission() async {
+    try {
+      await methodChannel.invokeMethod("requestNotificationPermissions");
+    } on PlatformException catch (e) {
+      throw PlatformException(message: e.message, code: e.code);
+    }
+  }
+
+  Future<void> registerDevice() async {
+    try {
+      await methodChannel.invokeMethod("registerForPushNotifications");
+    } on PlatformException catch (e) {
+      throw PlatformException(message: e.message, code: e.code);
+    }
+  }
+
+  Future<String?> retriveDeviceToken() async {
+    try {
+      return await methodChannel.invokeMethod<String>("retrieveDeviceToken");
+    } on PlatformException catch (e) {
+      throw PlatformException(message: e.message, code: e.code);
+    }
+  }
+
+  handlerPushNotificationData({required BuildContext context}) async {
+    methodChannel.setMethodCallHandler((call) async {
+      if (call.method == "onPushNotification") {
+        final customKey = call.arguments as String;
+        showCupertinoDialog<void>(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+            title: const Text('You click on Push Notification'),
+            content: Text('The text is -> $customKey'),
+            actions: <CupertinoDialogAction>[
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Close'),
+              ),
+            ],
+          ),
+        );
+      }
+    });
   }
 }

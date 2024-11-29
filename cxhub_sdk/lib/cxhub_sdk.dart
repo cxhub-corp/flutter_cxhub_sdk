@@ -25,19 +25,26 @@ class CxHubSdk {
     return _instance!;
   }
 
-  static void init({String? param}) => CxHubSdkPlatform.instance.init(param: param);
+  static void init({String? param}) =>
+      CxHubSdkPlatform.instance.init(param: param);
 
-  static Future<String?> getPlatformVersion() => CxHubSdkPlatform.instance.getPlatformVersion();
+  static Future<String?> getPlatformVersion() =>
+      CxHubSdkPlatform.instance.getPlatformVersion();
 
-  static Future<String?> getMobileInstance() => CxHubSdkPlatform.instance.getMobileInstance();
+  static Future<String?> getMobileInstance() =>
+      CxHubSdkPlatform.instance.getMobileInstance();
 
-  static Future<String?> getPushToken() => CxHubSdkPlatform.instance.getPushToken();
+  static Future<String?> getPushToken() =>
+      CxHubSdkPlatform.instance.getPushToken();
 
-  static Stream<String?> subscribeToPushToken() => CxHubSdkPlatform.instance.subscribeToPushToken();
+  static Stream<String?> subscribeToPushToken() =>
+      CxHubSdkPlatform.instance.subscribeToPushToken();
 
-  static Future unsubscribeToPushToken() => CxHubSdkPlatform.instance.unsubscribeToPushToken();
+  static Future unsubscribeToPushToken() =>
+      CxHubSdkPlatform.instance.unsubscribeToPushToken();
 
-  static Future<MapEntry<String, String>?> getUserId() => CxHubSdkPlatform.instance.getUserId();
+  static Future<MapEntry<String, String>?> getUserId() =>
+      CxHubSdkPlatform.instance.getUserId();
 
   static Future setUserId(String userIdType, String userIdValue) =>
       CxHubSdkPlatform.instance.setUserId(userIdType, userIdValue);
@@ -45,6 +52,22 @@ class CxHubSdk {
   static Future setUserProperties(Map<String, String> properties) =>
       CxHubSdkPlatform.instance.setUserProperties(properties);
 
-  static Future collectEvent(String key, {String? value, Map<String, String>? properties, bool deliverImmediately = false}) =>
-      CxHubSdkPlatform.instance.collectEvent(key, value, properties, deliverImmediately);
+  static Future collectEvent(String key,
+          {String? value,
+          Map<String, String>? properties,
+          bool deliverImmediately = false}) =>
+      CxHubSdkPlatform.instance
+          .collectEvent(key, value, properties, deliverImmediately);
+
+  //iOS
+  static Future<void> requestPushNotificationPermission() =>
+      CxHubSdkPlatform.instance.requestPushNotificationPermission();
+
+  static Future<void> registerDevice() =>
+      CxHubSdkPlatform.instance.registerDevice();
+
+  static Future<String?> retriveDeviceToken() =>
+      CxHubSdkPlatform.instance.retriveDeviceToken();
+
+  //static void handlerPushNotificationData({required BuildContext context});
 }
