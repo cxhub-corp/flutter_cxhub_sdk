@@ -92,6 +92,24 @@ class MainScreen extends StatelessWidget {
               },
             ),
             PropertyField(
+              name: "UserId (List)",
+              actionName: "Send",
+              initial: CxHubSdk.getUserId().catchError((e) {
+                debugPrint("getUserId error $e");
+                return const MapEntry("ERROR", "ERROR");
+              }),
+              action: (type, value) {
+                CxHubSdk.setUserId(type, value).catchError((e) {
+                  debugPrint("setUserId error $e");
+                });
+              },
+              types: const {
+                "Email": "Email",
+                "VKID": "VKID",
+                "WebId": "WebId",
+              },
+            ),
+            PropertyField(
               name: "User property",
               actionName: "Send",
               action: (type, value) {

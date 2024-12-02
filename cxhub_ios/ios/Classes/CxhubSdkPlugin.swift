@@ -20,6 +20,8 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         CXNotify.getInstance()?.setDelegate(instance)
         
         instance.addObservers()
+        let notificationCenter = UNUserNotificationCenter.current()
+        notificationCenter.delegate = instance
         
         UIApplication.shared.registerForRemoteNotifications()
         
@@ -32,18 +34,38 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let application = UIApplication.shared
+        //let application = UIApplication.shared
         switch call.method {
         case "getPlatformVersion":
             result("iOS " + UIDevice.current.systemVersion)
+            break
         case "requestNotificationPermissions":
             self.requestNotificationPermissions(result: result)
-        case "registerForPushNotifications":
-            self.registerForPushNotifications(application: application, result: result)
+        //case "registerForPushNotifications":
+        //    self.registerForPushNotifications(application: application, result: result)
+            break
         case "retrieveDeviceToken":
             self.getDeviceToken(result: result)
+            break
         case "getMobileInstance":
             self.getMobileInstance(result: result)
+            break
+        case "setUserId":
+            guard let args = call.arguments as? Dictionary<String, Any> else {return}
+            let userIdType : String = args["idType"] as! String
+            let userIdValue : String = args["idValue"] as! String
+            let synchronous : Bool = args["synchronous"] as! Bool
+            self.setUserId(idType: userIdType , idValue: userIdValue, synchronous: synchronous, result: result)
+            break
+        case "setUserProperties":
+            guard let args = call.arguments as? Dictionary<String, Any> else {return}
+            var props : Dictionary <String, String> = Dictionary()
+            for propKey in args.keys {
+                let propValue = args[propKey] as! String
+                props[propKey] = propValue
+            }
+            self.setUserProperties(properties: props, result: result)
+            break
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -72,7 +94,7 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         }
     }
     
-    private func registerForPushNotifications(application: UIApplication, result: @escaping FlutterResult) {
+    public func registerForPushNotifications(application: UIApplication, result: @escaping FlutterResult) {
         application.registerForRemoteNotifications()
         result("Device Token registration initiated")
     }
@@ -89,6 +111,69 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         result(CXNotify.getInstance()?.getInstanceId())
     }
     
+    public func setUserProperties(properties : Dictionary<String, String>, result: @escaping FlutterResult) {
+        for propKey in properties.keys {
+            let propVal : String = properties[propKey]!
+            CXNotify.getInstance()?.setInstanceProperty(propKey, withStringValue: propVal)
+        }
+        result(true)
+    }
+    
+    public func setUserId(idType : String, idValue: String, synchronous: Bool, result: @escaping FlutterResult) {
+        CXNotify.getInstance()?.setUserId(idValue, ofType: idType)
+        result(true)
+    }
+    
+    @nonobjc public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        let joinedCompletionHandler = CXApp.didReceiveRemoteNotification(userInfo, fetchCompletionHandler: completionHandler)
+        //Do here your application specific push processing logic.
+        joinedCompletionHandler(.noData)
+    }
+    
+    @nonobjc  func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+
+        if let joinedCompletionHandler = CXApp.performFetch(completionHandler: completionHandler) {
+            //Simulate some application specific background data processing
+            Thread.sleep(forTimeInterval: 1)
+            //When all down call an aggregated callback to give ability to CXHubSDK complete all it's
+            //background tasks
+            joinedCompletionHandler(.newData)
+        } else {
+            completionHandler(.newData)
+        }
+    }
+    
+    private func handleNotification(userInfo: [AnyHashable: Any]) {
+        let window = UIApplication.shared.delegate?.window
+        let controller: FlutterViewController = window??.rootViewController as! FlutterViewController
+        let pushNotificationChannel = FlutterMethodChannel(name: "cxhub_sdk",binaryMessenger: controller.binaryMessenger)
+        if let customData = userInfo as? AnyHashable /*["customKey"] as? String*/ {
+            pushNotificationChannel.invokeMethod("onPushNotification", arguments: customData)
+        }
+    }
+    
+}
+
+// MARK: Add observers
+extension CxhubSdkPlugin {
+    public func addObservers () {
+        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: UIApplication.shared)
+        
+        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationWillEnterForeground(_:)), name: UIApplication.willEnterForegroundNotification, object: UIApplication.shared)
+        
+        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationWillResignActive(_:)), name: UIApplication.willResignActiveNotification, object: UIApplication.shared)
+        
+        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationDidEnterBackground(_:)), name: UIApplication.didEnterBackgroundNotification, object: UIApplication.shared)
+        
+        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: UIApplication.shared)
+        
+        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationSignificantTimeChange(_:)), name: UIApplication.significantTimeChangeNotification, object: UIApplication.shared)
+    }
+}
+
+// MARK: UIApplicationDelegate
+extension CxhubSdkPlugin  {   //UIApplicationDelegate
     public func applicationWillEnterForeground(_ application: UIApplication) {
         //Forward system call to CXHubSDK
         CXApp.applicationWillEnterForeground(application)
@@ -119,26 +204,11 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         //Forward system call to CXHubSDK
         CXApp.applicationSignificantTimeChange(application)
     }
-    
-    @nonobjc public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        
-        let joinedCompletionHandler = CXApp.didReceiveRemoteNotification(userInfo, fetchCompletionHandler: completionHandler)
-        //Do here your application specific push processing logic.
-        joinedCompletionHandler(.noData)
-    }
-    
-    @nonobjc  func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+}
 
-        if let joinedCompletionHandler = CXApp.performFetch(completionHandler: completionHandler) {
-            //Simulate some application specific background data processing
-            Thread.sleep(forTimeInterval: 1)
-            //When all down call an aggregated callback to give ability to CXHubSDK complete all it's
-            //background tasks
-            joinedCompletionHandler(.newData)
-        } else {
-            completionHandler(.newData)
-        }
-    }
+//MARK:  UNUserNotificationCenterDelegate
+
+extension CxhubSdkPlugin:  UNUserNotificationCenterDelegate {
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        willPresent notification: UNNotification,
@@ -157,34 +227,10 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         handleNotification(userInfo: userInfo)
         completionHandler()
     }
-    
-    private func handleNotification(userInfo: [AnyHashable: Any]) {
-        let window = UIApplication.shared.delegate?.window
-        let controller: FlutterViewController = window??.rootViewController as! FlutterViewController
-        let pushNotificationChannel = FlutterMethodChannel(name: "cxhub_sdk",binaryMessenger: controller.binaryMessenger)
-        if let customData = userInfo as? AnyHashable /*["customKey"] as? String*/ {
-            pushNotificationChannel.invokeMethod("onPushNotification", arguments: customData)
-        }
-    }
-    
 }
 
-extension CxhubSdkPlugin {
-    public func addObservers () {
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: UIApplication.shared)
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationWillEnterForeground(_:)), name: UIApplication.willEnterForegroundNotification, object: UIApplication.shared)
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationWillResignActive(_:)), name: UIApplication.willResignActiveNotification, object: UIApplication.shared)
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationDidEnterBackground(_:)), name: UIApplication.didEnterBackgroundNotification, object: UIApplication.shared)
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: UIApplication.shared)
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationSignificantTimeChange(_:)), name: UIApplication.significantTimeChangeNotification, object: UIApplication.shared)
-    }
-}
 
+//MARK: CXNotifyDelegate
 extension CxhubSdkPlugin: CXNotifyDelegate {
 
     //MARK: @required:
