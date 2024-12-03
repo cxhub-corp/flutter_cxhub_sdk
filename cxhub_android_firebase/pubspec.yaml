@@ -1,7 +1,7 @@
 name: cxhub_android
 description: "Android firebase implementation cxhub_sdk"
 version: 0.0.1-firebase
-publish_to: 'none'
+publish_to: https://onepub.dev/api/afhaavuhno
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
