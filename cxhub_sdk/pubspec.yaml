@@ -25,7 +25,7 @@ dependencies:
     version: 0.0.1
   cxhub_android:
     hosted: https://onepub.dev/api/afhaavuhno/
-    version: 0.0.1-firebase
+    version: ^0.0.1-firebase
   cxhub_ios:
     hosted: https://onepub.dev/api/afhaavuhno/
     version: 0.0.1
