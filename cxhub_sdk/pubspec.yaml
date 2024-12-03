@@ -20,9 +20,15 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  cxhub_platform_interface: 0.0.1
-  cxhub_android: 0.0.1-firebase
-  cxhub_ios: 0.0.1
+  cxhub_platform_interface:
+    hosted: https://onepub.dev/api/afhaavuhno/
+    version: 0.0.1
+  cxhub_android:
+    hosted: https://onepub.dev/api/afhaavuhno/
+    version: 0.0.1-firebase
+  cxhub_ios:
+    hosted: https://onepub.dev/api/afhaavuhno/
+    version: 0.0.1
 
 dev_dependencies:
   flutter_test:

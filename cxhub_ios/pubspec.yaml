@@ -20,7 +20,9 @@ dependencies:
   flutter:
     sdk: flutter
   cxhub_platform_interface:
-    path: ../cxhub_platform_interface
+    hosted: https://onepub.dev/api/afhaavuhno/
+    version: 0.0.1
+
 
 
 dev_dependencies:
