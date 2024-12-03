@@ -19,8 +19,7 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  cxhub_platform_interface:
-    path: ../cxhub_platform_interface
+  cxhub_platform_interface: 0.0.1
 
 dev_dependencies:
   flutter_test:
