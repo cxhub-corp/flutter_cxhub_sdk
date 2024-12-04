@@ -26,17 +26,30 @@ end
 
 require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
 
-flutter_ios_podfile_setup
+#flutter_ios_podfile_setup do |setuper|
+  #setuper.pods_project.targets.each do |target|
+  #  use_frameworks!
+  #  use_modular_headers!
+  #  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  #end
+#end
 
-target 'Runner' do
-  use_frameworks!
-  use_modular_headers!
-
-  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-  target 'RunnerTests' do
-    inherit! :search_paths
+  
+  target 'Runner' do
+    use_frameworks!
+    use_modular_headers!
+    flutter_install_all_ios_pods  File.dirname(File.realpath(__FILE__))
+      target 'RunnerTests' do
+        inherit! :search_paths
+      end
   end
-end
+
+
+#  target 'ServiceExtension' do
+#    use_frameworks!
+#    use_modular_headers!
+#    flutter_install_all_ios_pods  File.dirname(File.realpath(__FILE__))
+#  end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
