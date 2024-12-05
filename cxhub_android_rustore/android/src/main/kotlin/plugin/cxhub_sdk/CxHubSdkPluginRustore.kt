@@ -2,7 +2,7 @@ package plugin.cxhub_sdk
 
 import cxhub.api.RuStorePlatformManager
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import plugin.common.CxHubSdkPluginCommon
+import plugin.cxhub_sdk.CxHubSdkPluginCommon
 import ru.rustore.sdk.pushclient.RuStorePushClient;
 
 /** CxhubSdkPlugin */

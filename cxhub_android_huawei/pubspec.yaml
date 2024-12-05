@@ -1,7 +1,7 @@
 name: cxhub_android
-description: "Android firebase implementation cxhub_sdk"
+description: "Android platform implementation for cxhub_sdk"
 version: 0.0.1-huawei
-publish_to: https://onepub.dev/api/afhaavuhno/
+publish_to: https://onepub.dev/api/ndfuuhnofl
 homepage: https://gitlab.corp.mail.ru/cxhub1/flutter-sdk
 repository: https://gitlab.corp.mail.ru/cxhub1/flutter-sdk
 
@@ -22,7 +22,7 @@ dependencies:
   flutter:
     sdk: flutter
   cxhub_platform_interface:
-    hosted: https://onepub.dev/api/afhaavuhno/
+    hosted: https://onepub.dev/api/ndfuuhnofl
     version: 0.0.1
 
 dev_dependencies:

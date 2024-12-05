@@ -12,18 +12,21 @@ dependencies:
   flutter:
     sdk: flutter
   cxhub_sdk:
-    hosted: https://onepub.dev/api/afhaavuhno/
+    hosted: https://onepub.dev/api/ndfuuhnofl
     version: ^0.0.1
   cupertino_icons: ^1.0.6
 
 dependency_overrides:
 ## Uncomment needed part to switch to huawei|rustore implementation
 ## default is firebase
+cxhub_android:
+  hosted: https://onepub.dev/api/afhaavuhno/
+  version: 0.0.1-firebase
 #  cxhub_android:
-#    hosted: https://onepub.dev/api/afhaavuhno/
+#    hosted: https://onepub.dev/api/ndfuuhnofl
 #    version: 0.0.1
 #  cxhub_android: 0.0.1-huawei
-#    hosted: https://onepub.dev/api/afhaavuhno/
+#    hosted: https://onepub.dev/api/ndfuuhnofl
 #    version: 0.0.1-rustore
 
 dev_dependencies:
