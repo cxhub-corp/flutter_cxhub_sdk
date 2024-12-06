@@ -19,13 +19,10 @@ dependencies:
 ## Uncomment needed part to switch to huawei|rustore implementation
 ## default is firebase
 ## dependency_overrides:
-#cxhub_android:
-#  hosted: https://onepub.dev/api/afhaavuhno/
-#  version: 0.0.2-firebase
 #  cxhub_android:
 #    hosted: https://onepub.dev/api/ndfuuhnofl
-#    version: 0.0.2
-#  cxhub_android: 0.0.2-huawei
+#    version: 0.0.2-huawei
+#  cxhub_android:
 #    hosted: https://onepub.dev/api/ndfuuhnofl
 #    version: 0.0.2-rustore
 
