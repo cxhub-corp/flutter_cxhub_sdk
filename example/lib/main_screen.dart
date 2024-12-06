@@ -26,35 +26,42 @@ class MainScreen extends StatelessWidget {
                 debugPrint("getMobileInstance error $e");
                 return "ERROR";
               }),
-              builder: (context, mobileId) => SimpleField(
-                name: "MobileId",
-                actionName: "Copy",
-                action: () => Clipboard.setData(ClipboardData(text: mobileId.data ?? "")),
-                child: Text(
-                  overflow: TextOverflow.ellipsis,
-                  mobileId.data ?? "",
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
+              builder: (context, mobileId) =>
+                  SimpleField(
+                    name: "MobileId",
+                    actionName: "Copy",
+                    action: () =>
+                        Clipboard.setData(
+                            ClipboardData(text: mobileId.data ?? "")),
+                    child: Text(
+                      overflow: TextOverflow.ellipsis,
+                      mobileId.data ?? "",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
             ),
             StreamBuilder(
-              stream: CxHubSdk.subscribeToPushToken().transform(StreamTransformer<String, String>.fromHandlers(
-                handleData: (data, sink) => sink.add(data),
-                handleError: (e, s, sink) {
-                  debugPrint("subscribeToPushToken error $e");
-                  sink.add("ERROR");
-                },
-              )),
-              builder: (context, pushToken) => SimpleField(
-                name: "Push token",
-                actionName: "Copy",
-                action: () => Clipboard.setData(ClipboardData(text: pushToken.data ?? "")),
-                child: Text(
-                  overflow: TextOverflow.ellipsis,
-                  pushToken.data ?? "",
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
+              stream: CxHubSdk.subscribeToPushToken().transform(
+                  StreamTransformer<String, String>.fromHandlers(
+                    handleData: (data, sink) => sink.add(data),
+                    handleError: (e, s, sink) {
+                      debugPrint("subscribeToPushToken error $e");
+                      sink.add("ERROR");
+                    },
+                  )),
+              builder: (context, pushToken) =>
+                  SimpleField(
+                    name: "Push token",
+                    actionName: "Copy",
+                    action: () =>
+                        Clipboard.setData(
+                            ClipboardData(text: pushToken.data ?? "")),
+                    child: Text(
+                      overflow: TextOverflow.ellipsis,
+                      pushToken.data ?? "",
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
             ),
             LoginField(
               name: "UserId (Phone)",
@@ -82,9 +89,12 @@ class MainScreen extends StatelessWidget {
                 "City": "City",
                 "FirstName": "FirstName",
                 "MiddleName": "MiddleName",
-                "LastName": "LastName",
+                "LastNconst ame": "LastName",
               },
             ),
+            MaterialButton(child: const Text("Send event"), onPressed: () {
+              CxHubSdk.collectEvent("CustomEvent", deliverImmediately: true);
+            }),
           ],
         ),
       ),

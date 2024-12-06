@@ -100,8 +100,8 @@ mixin CxHubSdkMixin {
         {
           'key': key,
           'value': value,
-          properties: properties,
-          deliverImmediately: deliverImmediately,
+          'properties': properties,
+          'deliverImmediately': deliverImmediately,
         },
       )..ignore();
 

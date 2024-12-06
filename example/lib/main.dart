@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   CxHubSdk.init();
+  CxHubSdk.collectEvent("AppCreate");
   runApp(const MyApp());
 }
 

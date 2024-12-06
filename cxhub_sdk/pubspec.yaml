@@ -22,13 +22,13 @@ dependencies:
     sdk: flutter
   cxhub_platform_interface:
     hosted: https://onepub.dev/api/ndfuuhnofl
-    version: 0.0.1
+    version: ^0.0.2
   cxhub_android:
     hosted: https://onepub.dev/api/ndfuuhnofl
-    version: ^0.0.1-firebase
+    version: ^0.0.2-firebase
   cxhub_ios:
     hosted: https://onepub.dev/api/ndfuuhnofl
-    version: 0.0.1
+    version: ^0.0.2
 
 dev_dependencies:
   flutter_test:
