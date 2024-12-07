@@ -11,20 +11,16 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "cxhub_sdk", binaryMessenger: registrar.messenger())
         
-       guard let configFile = Bundle.main.path(forResource: "Notify", ofType: "plist") else { fatalError() };
-        guard let config = CXAppConfig(config: configFile) else { fatalError() }
-        if !Bundle.main.bundlePath.hasSuffix(".appex") {
-            instance.addObservers()
-        }
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.delegate = instance
         
-        apiIsInitialized = CXHubSDKAPIBridge.initWith(config: config, eventsReceiver: nil)
- 
+        apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()
+        
         if !Bundle.main.bundlePath.hasSuffix(".appex") {
-            // Setup delegate to get requests from CXHubSDK
-            CXHubSDKAPIBridge.getInstance.setDelegate(instance)
-            //UIApplication.shared.registerForRemoteNotifications()
+            instance.addObservers()
+            if apiIsInitialized {
+                CXHubSDKAPIBridge.getInstance.setDelegate(instance)
+            }
             Application.shared.registerForRemoteNotifications()
         }
     
@@ -34,11 +30,14 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         
         
         registrar.addMethodCallDelegate(instance, channel: channel)
-        /*instance.requestNotificationPermissions(result: {_ in (() -> Void).self
-            instance.registerForPushNotifications(application: UIApplication.shared, result: {_ in (() -> Void).self
-            })
-        })*/
         
+    }
+    
+    public class func initCXHubSDK() -> Bool {
+        guard let configFile = Bundle.main.path(forResource: "Notify", ofType: "plist") else { fatalError() };
+        guard let config = CXAppConfig(config: configFile) else { fatalError() }
+        apiIsInitialized = CXHubSDKAPIBridge.initWith(config: config, eventsReceiver: nil)
+        return apiIsInitialized
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -301,4 +300,15 @@ extension CxhubSdkPlugin: CXNotifyDelegate {
         }
     }
 
+}
+
+//MARK: NotificationService
+extension CxhubSdkPlugin {
+    public class func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) -> Bool {
+        return CXApp.didReceiveExtensionNotificationRequest(request, withContentHandler: contentHandler)
+    }
+    
+    public class func serviceExtensionTimeWillExpire() -> Bool {
+        return CXApp.serviceExtensionTimeWillExpire()
+    }
 }

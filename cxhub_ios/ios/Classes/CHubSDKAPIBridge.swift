@@ -30,14 +30,14 @@ open class CXHubSDKAPIBridge  {
     }
     
     @objc public class func initWith( config: CXAppConfig, eventsReceiver:  CXUnhandledErrorReceiver?) -> Bool {
-        var initSelector : Selector = NSSelectorFromString("initWith(config:eventsReceiver:)")
+        var initSelector : Selector = NSSelectorFromString("initWithConfig:withEventsReceiver:")
         if Bundle.main.bundlePath.hasSuffix(".appex") {
-            initSelector = NSSelectorFromString("initExtensionWith(config:eventsReceiver:)")
+            initSelector = NSSelectorFromString("initExtensionWithConfig:withEventsReceiver:")
         }
         guard CXApp.responds(to: initSelector) else {
             fatalError("[Extensions can't access initWith: eventsReceiver:]")
         }
-        guard let result = CXApp.perform(initSelector) else {
+        guard let _ = CXApp.perform(initSelector,with: config) else {
             return false
         }
         

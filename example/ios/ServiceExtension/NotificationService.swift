@@ -6,21 +6,40 @@
 //
 
 import UserNotifications
+import cxhub_ios
+import CXHubCore
+import CXHubNotify
 
 class NotificationService: UNNotificationServiceExtension {
-
+    
     var contentHandler: ((UNNotificationContent) -> Void)?
     var bestAttemptContent: UNMutableNotificationContent?
-
+    private var apiIsInitialized :  Bool = false
+    
+    override init() {
+        apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()
+    }
+    
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
         if let bestAttemptContent = bestAttemptContent {
             // Modify the notification content here...
-            bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
+            //bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
             
-            contentHandler(bestAttemptContent)
+            if apiIsInitialized {
+                if CxhubSdkPlugin.didReceive(request, withContentHandler: contentHandler) {
+                    return
+                }
+                else {
+                    contentHandler(bestAttemptContent)
+                }
+            }
+            
+            else {
+                contentHandler(bestAttemptContent)
+            }
         }
     }
     
@@ -28,8 +47,19 @@ class NotificationService: UNNotificationServiceExtension {
         // Called just before the extension will be terminated by the system.
         // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
         if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
-            contentHandler(bestAttemptContent)
+            if apiIsInitialized {
+                if CxhubSdkPlugin.serviceExtensionTimeWillExpire() {
+                    return
+                }
+                else {
+                    contentHandler(bestAttemptContent)
+                }
+            }
+            
+            else {
+                contentHandler(bestAttemptContent)
+            }
         }
     }
-
+    
 }
