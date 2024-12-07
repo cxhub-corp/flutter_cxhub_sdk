@@ -26,7 +26,5 @@ import cxhub_ios
         CxhubSdkPlugin.instance.application(application, didFailToRegisterForRemoteNotificationsWithError: error)
         return super.application(application, didFailToRegisterForRemoteNotificationsWithError: error)
     }
-    
-    
-    
+
 }

@@ -230,9 +230,14 @@ extension CxhubSdkPlugin:  UNUserNotificationCenterDelegate {
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        didReceive response: UNNotificationResponse,
                                        withCompletionHandler completionHandler: @escaping () -> Void) {
-        let userInfo = response.notification.request.content.userInfo
-        handleNotification(userInfo: userInfo)
-        completionHandler()
+        //let userInfo = response.notification.request.content.userInfo
+        //handleNotification(userInfo: userInfo)
+        //completionHandler()
+        if let joinedCompletionHandler = CXApp.didReceive(response, withCompletionHandler: completionHandler) {
+            joinedCompletionHandler()
+        } else {
+            completionHandler()
+        }
     }
 }
 
