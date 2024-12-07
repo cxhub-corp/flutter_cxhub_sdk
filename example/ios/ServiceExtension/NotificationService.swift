@@ -2,7 +2,7 @@
 //  NotificationService.swift
 //  ServiceExtension
 //
-//  Created by Vladimir Kukhar on 04.12.2024.
+//  Created by Vladimir Kukhar on 07.12.2024.
 //
 
 import UserNotifications
