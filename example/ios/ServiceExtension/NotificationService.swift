@@ -25,9 +25,6 @@ class NotificationService: UNNotificationServiceExtension {
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
         if let bestAttemptContent = bestAttemptContent {
-            // Modify the notification content here...
-            //bestAttemptContent.title = "\(bestAttemptContent.title) [modified]"
-            
             if apiIsInitialized {
                 if CxhubSdkPlugin.didReceive(request, withContentHandler: contentHandler) {
                     return
@@ -44,8 +41,6 @@ class NotificationService: UNNotificationServiceExtension {
     }
     
     override func serviceExtensionTimeWillExpire() {
-        // Called just before the extension will be terminated by the system.
-        // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
         if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
             if apiIsInitialized {
                 if CxhubSdkPlugin.serviceExtensionTimeWillExpire() {

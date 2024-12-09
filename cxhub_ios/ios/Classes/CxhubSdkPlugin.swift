@@ -8,20 +8,25 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     public static let instance = CxhubSdkPlugin()
     public static var apiIsInitialized :  Bool = false
     
+    override init() {
+        //if deviceToken == "" {self.deviceToken = ""}
+        if !CxhubSdkPlugin.apiIsInitialized {CxhubSdkPlugin.apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()}
+    }
+    
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "cxhub_sdk", binaryMessenger: registrar.messenger())
         
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.delegate = instance
         
-        apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()
+        if !CxhubSdkPlugin.apiIsInitialized {CxhubSdkPlugin.apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()}
         
         if !Bundle.main.bundlePath.hasSuffix(".appex") {
             instance.addObservers()
             if apiIsInitialized {
                 CXHubSDKAPIBridge.getInstance.setDelegate(instance)
             }
-            Application.shared.registerForRemoteNotifications()
+            if CxhubSdkPlugin.instance.deviceToken == "" {Application.shared.registerForRemoteNotifications()}
         }
     
         //CXApp.setUnhandledErrorReceiver(NotifyHandler())
@@ -36,26 +41,36 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     public class func initCXHubSDK() -> Bool {
         guard let configFile = Bundle.main.path(forResource: "Notify", ofType: "plist") else { fatalError() };
         guard let config = CXAppConfig(config: configFile) else { fatalError() }
-        apiIsInitialized = CXHubSDKAPIBridge.initWith(config: config, eventsReceiver: nil)
-        return apiIsInitialized
+        let _apiIsInitialized = CXHubSDKAPIBridge.initWith(config: config, eventsReceiver: nil)
+        return _apiIsInitialized
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        //let application = UIApplication.shared
+        let application = Application.shared
         switch call.method {
+        case "init":
+            let message = "CxhubSdkPlugin is initialized"
+            result(message)
+            break
         case "getPlatformVersion":
             result("iOS " + UIDevice.current.systemVersion)
             break
         case "requestNotificationPermissions":
             self.requestNotificationPermissions(result: result)
-        //case "registerForPushNotifications":
-        //    self.registerForPushNotifications(application: application, result: result)
+        case "registerForPushNotifications":
+            self.registerForPushNotifications(application: application, result: result)
             break
         case "retrieveDeviceToken":
             self.getDeviceToken(result: result)
             break
+        case "getPushToken":
+            self.getDeviceToken(result: result)
+            break
         case "getMobileInstance":
             self.getMobileInstance(result: result)
+            break
+        case "getUserId":
+            self.getUserId(result: result)
             break
         case "setUserId":
             guard let args = call.arguments as? Dictionary<String, Any> else {return}
@@ -73,6 +88,17 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
             }
             self.setUserProperties(properties: props, result: result)
             break
+        case "collectEvent":
+            guard let args = call.arguments as? Dictionary<AnyHashable, Any> else {return}
+            let key : String? = args["key"] as? String
+            if key != nil {
+                let value : String? = args["value"] as? String
+                CXHubSDKAPIBridge.getInstance.collectEvent(key!, withValue: (value ?? "") as String as NSObject, withProperties: nil)
+                result("Event collected")
+                break
+            }
+            result("Event is not collected. Key is nil!")
+            break
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -82,7 +108,6 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
         self.deviceToken = token
-        NSLog("%@",token)
         CXApp.applicationDidRegisterForRemoteNotifications(withDeviceToken: deviceToken)
     }
     
@@ -118,12 +143,21 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         result(CXHubSDKAPIBridge.getInstance.getInstanceId())
     }
     
+    private func getUserId(result: @escaping FlutterResult) {
+        result(CXHubSDKAPIBridge.getInstance.getUserId())
+    }
+    
     public func setUserProperties(properties : Dictionary<String, String>, result: @escaping FlutterResult) {
         for propKey in properties.keys {
             let propVal : String = properties[propKey]!
             CXHubSDKAPIBridge.getInstance.setInstanceProperty(propKey, withStringValue: propVal)
         }
         result(true)
+    }
+    
+    public func collectEvent(key: String, value: String, properties: Dictionary<String, NSCoding & NSObjectProtocol>, result: @escaping FlutterResult) {
+        CXHubSDKAPIBridge.getInstance.collectEvent(key, withValue: value as NSObject, withProperties: properties)
+        NSLog("key: %@,\n value: %@,\n properties: %@", key, value, properties)
     }
     
     public func setUserId(idType : String, idValue: String, synchronous: Bool, result: @escaping FlutterResult) {

@@ -183,27 +183,4 @@ mixin CxHubSdkMixin {
       throw PlatformException(message: e.message, code: e.code);
     }
   }
-
-  handlerPushNotificationData({required BuildContext context}) async {
-    methodChannel.setMethodCallHandler((call) async {
-      if (call.method == "onPushNotification") {
-        final customKey = call.arguments as String;
-        showCupertinoDialog<void>(
-          context: context,
-          builder: (BuildContext context) => CupertinoAlertDialog(
-            title: const Text('You click on Push Notification'),
-            content: Text('The text is -> $customKey'),
-            actions: <CupertinoDialogAction>[
-              CupertinoDialogAction(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Close'),
-              ),
-            ],
-          ),
-        );
-      }
-    });
-  }
 }

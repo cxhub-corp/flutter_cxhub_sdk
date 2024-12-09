@@ -68,6 +68,4 @@ class CxHubSdk {
 
   static Future<String?> retriveDeviceToken() =>
       CxHubSdkPlatform.instance.retriveDeviceToken();
-
-  //static void handlerPushNotificationData({required BuildContext context});
 }

@@ -5,6 +5,8 @@ import 'package:cxhub_sdk/cxhub_sdk.dart';
 import 'package:cxhub_sdk_example/widgets/login_field.dart';
 import 'package:cxhub_sdk_example/widgets/property_field.dart';
 import 'package:cxhub_sdk_example/widgets/simple_field.dart';
+import 'package:cxhub_sdk_example/widgets/event_field.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -123,6 +125,16 @@ class MainScreen extends StatelessWidget {
                 "FirstName": "FirstName",
                 "MiddleName": "MiddleName",
                 "LastName": "LastName",
+              },
+            ),
+            EventField(
+              name: "Collect event",
+              actionName: "Send",
+              action: (key, value) {
+                CxHubSdk.collectEvent(key, value: value, properties: null)
+                    .catchError((e) {
+                  debugPrint("collectEvent error $e");
+                });
               },
             ),
           ],
