@@ -11,32 +11,36 @@ import UserNotificationsUI
 import cxhub_ios
 import CXHubNotify
 
-class NotificationViewController: UIViewController, UNNotificationContentExtension, CXContentExtensionDelegate {
+class NotificationViewController: UIViewController, UNNotificationContentExtension /*,CXContentExtensionDelegate*/ {
     
     private var apiIsInitialized :  Bool = false
     
+    // The following is required if you are going to use Storyboard for ContentExtension UI implementation. Using storyboard is really the better choice
+    // Example of storyboard can be found here as "MainInterface.storyboard"
+    // But in this case you need to edit Info.plist file as follows:
+    // - remove NSExtensionPrincipalClass = ContentExtension.NotificationViewController row
+    // - add NSExtensionMainStoryboard = MainInterface
+    // Then:
+    // - comment or remove var bigContentImage: UIImageView?
+    // - uncomment awakeFromNib() implementation together with @IBOutlet var bigContentImage: UIImageView!
+    // - connect BigContentImage (UIImageView in storyboard) to bigContentImage outlet
+    // - comment or remove viewDidLoad implementation below
+    // - comment or remove viewWillLayoutSubviews() implementation below
+    
     var bigContentImage: UIImageView?
+    //@IBOutlet var bigContentImage: UIImageView!
     
-    /*override func awakeFromNib() {
+    /*
+    override func awakeFromNib() {
         super.awakeFromNib()
-        apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()
-    }*/
-    
-    /*required init(coder: NSCoder) {
-        super.init(coder: coder)!
-        
-    }*/
-    
-    /*override func loadView() {
-        self.view = UIView(frame: .zero)
-        super.loadView()
+        apiIsInitialized = CxhubSdkPlugin.initCXHubSdkWithContentExtensionImage(bigImage: self.bigContentImage)
     }*/
     
     override func viewDidLoad() {
         super.viewDidLoad()
         if self.bigContentImage == nil {
-            self.bigContentImage = UIImageView.init(frame: .zero)//self.view.bounds)//
-            self.bigContentImage!.contentMode = UIView.ContentMode.top//scaleAspectFit
+            self.bigContentImage = UIImageView.init(frame: .zero)
+            self.bigContentImage!.contentMode = UIView.ContentMode.top
             self.view.addSubview(self.bigContentImage!)
             
             let constWidth:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1, constant: 0);
@@ -48,9 +52,6 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             let constX:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0);
             self.view.addConstraint(constX);
             
-            //let constTop:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.top, multiplier: 1, constant: 0);
-            //self.view.addConstraint(constTop);
-            
             let constY:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0);
             self.view.addConstraint(constY);
             
@@ -60,6 +61,8 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             self.view!.layer.borderColor = UIColor.green.cgColor
             self.view!.layer.borderWidth = 2.0
             
+            //The following is the only call, which is required to initialize CXHubSDK correctly to work with ContentExtension
+            //If you plan to use Storyboard for ContentExtension interface, then this call has to be made inside awakeFromNib() implementation (see above)
             apiIsInitialized = CxhubSdkPlugin.initCXHubSdkWithContentExtensionImage(bigImage: self.bigContentImage!)
         }
     }
@@ -72,7 +75,10 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     }
     
     func didReceive(_ notification: UNNotification) {
+        //This variant is for CxhubSdkPlugin as CXContentExtensionDelegate
         let processed = apiIsInitialized && CxhubSdkPlugin.instance.didReceive(notification)
+        
+        //This variant is to use ContentExtension itself as CXContentExtensionDelegate
         //let processed = apiIsInitialized && CxhubSdkPlugin.instance.didReceive(notification, delegate: self)
         
         if (!processed) {
@@ -92,9 +98,11 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
         }
     }
     
+    //If you use ContentExtension as CXContentExtensionDelegate, then you need to implement the following method (below is example, the same imlementation is used inside CxhubSdkPlugin). You don't need this, if you use CxhubSdkPlugin as CXContentExtensionDelegate
+    /*
     public func onContentUpdated(_ content: CXContentExtensionData?, for notification: UNNotification, withError error: Error?) {
         let localContent: CXContentExtensionData? = content
-
+        
         DispatchQueue.main.async {
             guard let content = localContent, let attachmentData = content.attachmentData, error == nil else {
                 return
@@ -103,19 +111,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
                 self.bigContentImage = UIImageView()
             }
             self.bigContentImage!.image = UIImage(data: attachmentData)
-            let superView : UIView? = self.bigContentImage!.superview
-            let imageSize = self.bigContentImage!.image?.size
-            if superView != nil && imageSize != .zero {
-                let heightV = superView!.bounds.height
-                let heightImg = imageSize!.height
-                let coefH = heightImg/heightV
-                let constHeight:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.height, multiplier: coefH, constant: 0);
-                superView!.addConstraint(constHeight);
-                superView!.updateConstraints()
-                
-            //    superView?.layoutIfNeeded()//setNeedsDisplay()//setNeedsLayout()
-            }
-            //self.bigContentImage!.superview?.layoutIfNeeded()
+            
         }
-    }
+    }*/
 }

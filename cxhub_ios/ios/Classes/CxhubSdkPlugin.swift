@@ -402,19 +402,6 @@ extension CxhubSdkPlugin : CXContentExtensionDelegate {
                 self.bigContentImage = UIImageView()
             }
             self.bigContentImage!.image = UIImage(data: attachmentData)
-            //let superView : UIView? = self.bigContentImage!.superview
-            //let imageSize = self.bigContentImage!.image?.size
-            //if superView != nil {//&& imageSize != .zero {
-                //let heightV = superView!.bounds.height
-                //let heightImg = imageSize!.height
-                //let coefH = heightImg/heightV
-                //let constHeight:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: superView!, attribute: NSLayoutConstraint.Attribute.height, multiplier: coefH > 0 ? coefH : 1, constant: 0);
-                //superView!.addConstraint(constHeight);
-                //superView!.updateConstraints()
-                
-            //    superView?.layoutIfNeeded()//setNeedsDisplay()//setNeedsLayout()
-            //}
-            //self.bigContentImage!.superview?.layoutIfNeeded()
         }
     }
 }
