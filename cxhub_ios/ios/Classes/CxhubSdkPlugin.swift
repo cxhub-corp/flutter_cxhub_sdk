@@ -1,12 +1,17 @@
 import Flutter
 import UIKit
+import UserNotifications
+import UserNotificationsUI
 import CXHubCore
 import CXHubNotify
 
 public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycleDelegate, UIApplicationDelegate {
+
     var deviceToken : String = ""
     public static let instance = CxhubSdkPlugin()
     public static var apiIsInitialized :  Bool = false
+    public var bigContentImage: UIImageView?
+    var extensionContext: NSExtensionContext?
     
     override init() {
         //if deviceToken == "" {self.deviceToken = ""}
@@ -36,6 +41,15 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         
         registrar.addMethodCallDelegate(instance, channel: channel)
         
+    }
+    
+    public class func initCXHubSdkWithContentExtensionImage(bigImage: UIImageView) -> Bool {
+        apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()
+        if apiIsInitialized {
+            CxhubSdkPlugin.instance.bigContentImage = bigImage;
+            return true
+        }
+        return false
     }
     
     public class func initCXHubSDK() -> Bool {
@@ -349,5 +363,58 @@ extension CxhubSdkPlugin {
     
     public class func serviceExtensionTimeWillExpire() -> Bool {
         return CXApp.serviceExtensionTimeWillExpire()
+    }
+}
+
+//MARK: ContentExtension
+
+extension CxhubSdkPlugin : CXContentExtensionDelegate {
+    
+    public func didReceive(_ notification: UNNotification) -> Bool {
+        var result : Bool = false
+        result = CXNotify.requestNotificationExtensionContent(notification, with: self)
+        return result
+    }
+    
+    public func didReceive(_ notification: UNNotification, delegate: CXContentExtensionDelegate) -> Bool {
+        var result : Bool = false
+        result = CXNotify.requestNotificationExtensionContent(notification, with: delegate)
+        return result
+    }
+    
+    public func didReceive(_ response: UNNotificationResponse, context: NSExtensionContext?, completionHandler completion: @escaping (UNNotificationContentExtensionResponseOption) -> Void) -> Bool {
+        if context == nil {
+            return false
+        }
+        self.extensionContext = context!
+        CXApp.didReceiveExtensionNotificationResponse(response, in: context!, completionHandler: completion)
+        return true
+    }
+    
+    public func onContentUpdated(_ content: CXContentExtensionData?, for notification: UNNotification, withError error: Error?) {
+        let localContent: CXContentExtensionData? = content
+
+        DispatchQueue.main.async {
+            guard let content = localContent, let attachmentData = content.attachmentData, error == nil else {
+                return
+            }
+            if self.bigContentImage == nil {
+                self.bigContentImage = UIImageView()
+            }
+            self.bigContentImage!.image = UIImage(data: attachmentData)
+            //let superView : UIView? = self.bigContentImage!.superview
+            //let imageSize = self.bigContentImage!.image?.size
+            //if superView != nil {//&& imageSize != .zero {
+                //let heightV = superView!.bounds.height
+                //let heightImg = imageSize!.height
+                //let coefH = heightImg/heightV
+                //let constHeight:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: superView!, attribute: NSLayoutConstraint.Attribute.height, multiplier: coefH > 0 ? coefH : 1, constant: 0);
+                //superView!.addConstraint(constHeight);
+                //superView!.updateConstraints()
+                
+            //    superView?.layoutIfNeeded()//setNeedsDisplay()//setNeedsLayout()
+            //}
+            //self.bigContentImage!.superview?.layoutIfNeeded()
+        }
     }
 }
