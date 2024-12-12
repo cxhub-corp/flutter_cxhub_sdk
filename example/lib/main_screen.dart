@@ -89,7 +89,7 @@ class MainScreen extends StatelessWidget {
                 "City": "City",
                 "FirstName": "FirstName",
                 "MiddleName": "MiddleName",
-                "LastNconst ame": "LastName",
+                "LastName": "LastName",
               },
             ),
             MaterialButton(child: const Text("Send event"), onPressed: () {
