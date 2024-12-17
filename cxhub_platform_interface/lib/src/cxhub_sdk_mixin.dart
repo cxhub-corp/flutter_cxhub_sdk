@@ -38,7 +38,7 @@ mixin CxHubSdkMixin {
 
   Stream<String?> subscribeToPushToken() {
     if (_pushController == null) {
-      _pushController = StreamController<String>();
+      _pushController = StreamController<String>.broadcast();
       _pushController!.onCancel = () {
         methodChannel.invokeMethod('unsubscribeToPushToken').ignore();
         _pushController = null;
@@ -48,7 +48,7 @@ mixin CxHubSdkMixin {
         _pushController = null;
       });
     }
-    final stream = _pushController!.stream;
+    final stream = _pushController!.stream.asBroadcastStream();
     return stream;
   }
 

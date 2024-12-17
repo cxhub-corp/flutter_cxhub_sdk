@@ -4,6 +4,7 @@ import 'package:cxhub_sdk/cxhub_sdk.dart';
 import 'package:cxhub_sdk_example/widgets/login_field.dart';
 import 'package:cxhub_sdk_example/widgets/property_field.dart';
 import 'package:cxhub_sdk_example/widgets/simple_field.dart';
+import 'package:cxhub_sdk_example/widgets/toast_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -41,11 +42,11 @@ class MainScreen extends StatelessWidget {
                   ),
             ),
             StreamBuilder(
-              stream: CxHubSdk.subscribeToPushToken().transform(
+              stream: CxHubSdk.subscribeToPushToken().asBroadcastStream().transform(
                   StreamTransformer<String, String>.fromHandlers(
                     handleData: (data, sink) => sink.add(data),
                     handleError: (e, s, sink) {
-                      debugPrint("subscribeToPushToken error $e");
+                      debugPrint("subscribeToPushToken  error $e");
                       sink.add("ERROR");
                     },
                   )),
@@ -95,6 +96,7 @@ class MainScreen extends StatelessWidget {
             MaterialButton(child: const Text("Send event"), onPressed: () {
               CxHubSdk.collectEvent("CustomEvent", deliverImmediately: true);
             }),
+            const NotificationToastBuilder(),
           ],
         ),
       ),
