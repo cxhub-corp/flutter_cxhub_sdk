@@ -3,3 +3,6 @@
 
 ## 0.0.2
 * Fix collectEvent
+
+## 0.0.3
+* Fix push stream error

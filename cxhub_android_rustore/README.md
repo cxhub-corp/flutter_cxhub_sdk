@@ -1,3 +1,3 @@
 # CxHubSdk Android Rustore
-Фтвкщшв Имплементация CxHubSdk для использования с пуш-уведомлениями Rustore   
+Android-имплементация CxHubSdk для использования с пуш-уведомлениями Rustore   
 
