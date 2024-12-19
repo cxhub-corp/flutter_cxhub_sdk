@@ -60,8 +60,8 @@ buildscript{
   }
 
   dependencies {
-    classpath("com.google.gms:google-services:4.4.2") // для firebase-пушей
-    classpath("com.huawei.agconnect:agcp:1.9.1.302") // для huawei-пушей
+    classpath("com.google.gms:google-services:4.4.2") // для firebase
+    classpath("com.huawei.agconnect:agcp:1.9.1.302") // для huawei
   }
 }
 
@@ -72,16 +72,17 @@ allprojects {
         google()
         mavenCentral()
         maven{
-            url "https://developer.huawei.com/repo/" // для huawei-пушей
+            url "https://developer.huawei.com/repo/" // для huawei
         }
         maven {
-            url "https://artifactory-external.vkpartner.ru/artifactory/maven" // для rustore-пушей
+            url "https://artifactory-external.vkpartner.ru/artifactory/maven" // для rustore
         }
         //...
     }
 }
-
 ```
+
+Репозитории помеченные комментариями добаляются только в случае использования указанного в них транспорта.
 
 В android/app/build.gradle необходимо добавить следующие строки:
 ```groovy
@@ -91,6 +92,25 @@ plugins {
     id "com.huawei.agconnect" // если используется huawei
     //...
 }
+```
+
+Плагины помеченные комментариями добаляются только в случае использования указанного в них траснспорта.
+
+
+При сборке плагином CxHubSdk в merged манифест добавляются следующие разрешения:
+
+```xml
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+```
 
 ### iOS
 
@@ -103,7 +123,7 @@ plugins {
 CxHubSdk.init();
 ```
 
-В случае использования имплементации Rustore:
+В случае использования Rustore:
 
 ```dart
 CxHubSdk.init("[yourRustoreProjectId]");
