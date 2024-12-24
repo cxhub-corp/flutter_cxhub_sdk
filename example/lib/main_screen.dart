@@ -43,8 +43,12 @@ class MainScreen extends StatelessWidget {
             ),
             Platform.isIOS
                 ? FutureBuilder(
-                    future: CxHubSdk.retriveDeviceToken().catchError((e) async {
-                      debugPrint("retriveDeviceToken error $e");
+                    //future: CxHubSdk.retriveDeviceToken().catchError((e) async {
+                    //  debugPrint("retriveDeviceToken error $e");
+                    //  return "ERROR";
+                    //}),
+                    future: CxHubSdk.getPushToken().catchError((e) async {
+                      debugPrint("getPushToken error $e");
                       return "ERROR";
                     }),
                     builder: (context, token) => SimpleField(

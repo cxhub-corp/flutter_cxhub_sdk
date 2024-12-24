@@ -21,9 +21,14 @@ mixin CxHubSdkMixin {
 
   void init({String? param}) {
     methodChannel.invokeMethod('init', param);
+    //if (Platform.isIOS) {
+    //  requestPushNotificationPermission().then((value) async {
+    //   registerDevice();
+    // });
+    //}
     if (Platform.isIOS) {
       requestPushNotificationPermission().then((value) async {
-        registerDevice();
+        //   registerDevice();
       });
     }
   }
@@ -171,14 +176,6 @@ mixin CxHubSdkMixin {
   Future<void> registerDevice() async {
     try {
       await methodChannel.invokeMethod("registerForPushNotifications");
-    } on PlatformException catch (e) {
-      throw PlatformException(message: e.message, code: e.code);
-    }
-  }
-
-  Future<String?> retriveDeviceToken() async {
-    try {
-      return await methodChannel.invokeMethod<String>("retrieveDeviceToken");
     } on PlatformException catch (e) {
       throw PlatformException(message: e.message, code: e.code);
     }

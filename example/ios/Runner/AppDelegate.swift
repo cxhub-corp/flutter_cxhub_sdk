@@ -1,7 +1,5 @@
 import Flutter
 import UIKit
-import CXHubCore
-import CXHubNotify
 import cxhub_ios
 
 @UIApplicationMain

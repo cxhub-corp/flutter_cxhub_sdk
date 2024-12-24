@@ -65,7 +65,4 @@ class CxHubSdk {
 
   static Future<void> registerDevice() =>
       CxHubSdkPlatform.instance.registerDevice();
-
-  static Future<String?> retriveDeviceToken() =>
-      CxHubSdkPlatform.instance.retriveDeviceToken();
 }

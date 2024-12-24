@@ -19,8 +19,9 @@ class EventField extends StatefulWidget {
 }
 
 class _EventFieldState extends State<EventField> {
-  final _focusNode = FocusNode();
+  final _focusNodeKey = FocusNode();
   final _controllerKey = TextEditingController(text: "");
+  final _focusNodeValue = FocusNode();
   final _controllerValue = TextEditingController(text: "");
 
   @override
@@ -36,7 +37,8 @@ class _EventFieldState extends State<EventField> {
 
   @override
   Widget build(BuildContext context) {
-    _focusNode.unfocus();
+    _focusNodeKey.unfocus();
+    _focusNodeValue.unfocus();
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
@@ -47,7 +49,7 @@ class _EventFieldState extends State<EventField> {
             Text(widget.name),
             const SizedBox(height: 8.0),
             TextFormField(
-              focusNode: _focusNode,
+              focusNode: _focusNodeKey,
               controller: _controllerKey,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -56,7 +58,7 @@ class _EventFieldState extends State<EventField> {
             ),
             const SizedBox(height: 8),
             TextFormField(
-              focusNode: _focusNode,
+              focusNode: _focusNodeValue,
               controller: _controllerValue,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),

@@ -55,11 +55,4 @@ abstract class CxHubSdkPlatform extends PlatformInterface {
 
   Future<void> registerDevice() =>
       throw UnimplementedError('registerDevice() has not been implemented.');
-
-  Future<String?> retriveDeviceToken() => throw UnimplementedError(
-      'retriveDeviceToken() has not been implemented.');
-
-  void handlerPushNotificationData({required BuildContext context}) =>
-      throw UnimplementedError(
-          'handlerPushNotificationData({required BuildContext context}) has not been implemented.');
 }
