@@ -16,18 +16,11 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     var extensionContext: NSExtensionContext?
     
     var deviceTokenObserver: NSKeyValueObservation?
-    var tokenWaitingQueue: DispatchSerialQueue?
-    @objc dynamic var deviceTokenSemaphore: DispatchSemaphore?
     
     override init() {
         super.init()
         if !CxhubSdkPlugin.apiIsInitialized {CxhubSdkPlugin.apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()}
         if !Bundle.main.bundlePath.hasSuffix(".appex") {
-            tokenWaitingQueue = DispatchSerialQueue(label: "com.cxhubsdk.register_for_notifications_queue", qos: DispatchQoS.userInitiated,
-                                                    attributes: DispatchSerialQueue.Attributes())
-            if(deviceTokenSemaphore == nil) {
-                deviceTokenSemaphore = DispatchSemaphore(value: 0)
-            }
             self.deviceTokenObserver = self.observe(\.deviceToken, options: .new, changeHandler: { (self, change) in
                 guard let newValue = change.newValue else {return}
                 if newValue != "" {
@@ -57,7 +50,6 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
             if apiIsInitialized {
                 CXHubSDKAPIBridge.getInstance.setDelegate(instance)
             }
-            //if CxhubSdkPlugin.instance.deviceToken == "" {Application.shared.registerForRemoteNotifications()}
         }
     
         //CXApp.setUnhandledErrorReceiver(NotifyHandler())
@@ -67,23 +59,6 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         
         registrar.addMethodCallDelegate(instance, channel: _channel!)
         
-    }
-    
-    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "deviceToken" && change != nil {
-            NSLog("change: %@",change!)
-            if self.deviceToken != "" { //&& change![oldKey] != change![newKey] {
-                DispatchQueue.main.async {
-                    CxhubSdkPlugin._channel!.invokeMethod("emitPushToken", arguments: self.deviceToken)
-                }
-            }
-            //else {
-                //result(FlutterError(code: "UNAVAILABLE", message: "Device token not available", details: nil))
-            //}
-        }
-        else {
-            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-        }
     }
     
     public class func initCXHubSdkWithContentExtensionImage(bigImage: UIImageView) -> Bool {
@@ -164,21 +139,11 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         let token = tokenParts.joined()
         self.deviceToken = token
         CXApp.applicationDidRegisterForRemoteNotifications(withDeviceToken: deviceToken)
-        //self.releaseSemaphore()
     }
-    
-    private func releaseSemaphore() {
-        self.tokenWaitingQueue!.async(qos: .userInitiated) {
-            if self.deviceTokenSemaphore != nil {
-                self.deviceTokenSemaphore!.signal()
-            }
-        }
-    }
-    
+        
     public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         CXApp.applicationDidFailToRegisterForRemoteNotificationsWithError(error)
         self.deviceToken = "Fail to get device token (pushToken)"
-        //self.releaseSemaphore()
     }
     
     
@@ -203,35 +168,10 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
                 Application.shared.registerForRemoteNotifications()
                 result("DeviceToken registration initiated")
             }
-            //Application.shared.registerForRemoteNotifications()
-            //let application = Application.shared
-            //application.registerForRemoteNotifications()
-            //self.tokenWaitingQueue!.async(qos: .userInitiated) {
-            //    self.deviceTokenSemaphore!.wait()
-            //    self.deviceTokenSemaphore = nil
-            //    if self.deviceToken != "" {
-            //        DispatchQueue.main.async {
-            //            CxhubSdkPlugin._channel!.invokeMethod("emitPushToken", arguments: self.deviceToken)
-            //        }
-            //    }
-            //    else {
-            //        result(FlutterError(code: "UNAVAILABLE", message: "Device token not available", details: nil))
-            //    }
-            //}
-            //result("Device Token registration initiated")
         }
         else {
-            //result(self.deviceToken)
             CxhubSdkPlugin._channel!.invokeMethod("emitPushToken", arguments: self.deviceToken)
             result("Device Token sent")
-        }
-    }
-    
-    private func getDeviceToken(result: @escaping FlutterResult) {
-        if(deviceToken.isEmpty) {
-            result(FlutterError(code: "UNAVAILABLE", message: "Device token not available", details: nil))
-        } else{
-            result(deviceToken)
         }
     }
     
@@ -271,25 +211,11 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     @nonobjc  func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
 
         if let joinedCompletionHandler = CXApp.performFetch(completionHandler: completionHandler) {
-            //Simulate some application specific background data processing
-            Thread.sleep(forTimeInterval: 1)
-            //When all down call an aggregated callback to give ability to CXHubSDK complete all it's
-            //background tasks
             joinedCompletionHandler(.newData)
         } else {
             completionHandler(.newData)
         }
     }
-    
-    private func handleNotification(userInfo: [AnyHashable: Any]) {
-        let window = Application.shared.delegate?.window
-        let controller: FlutterViewController = window??.rootViewController as! FlutterViewController
-        let pushNotificationChannel = FlutterMethodChannel(name: "cxhub_sdk",binaryMessenger: controller.binaryMessenger)
-        if let customData = userInfo as? AnyHashable /*["customKey"] as? String*/ {
-            pushNotificationChannel.invokeMethod("onPushNotification", arguments: customData)
-        }
-    }
-    
 }
 
 // MARK: Add observers
@@ -361,9 +287,6 @@ extension CxhubSdkPlugin:  UNUserNotificationCenterDelegate {
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        didReceive response: UNNotificationResponse,
                                        withCompletionHandler completionHandler: @escaping () -> Void) {
-        //let userInfo = response.notification.request.content.userInfo
-        //handleNotification(userInfo: userInfo)
-        //completionHandler()
         if let joinedCompletionHandler = CXApp.didReceive(response, withCompletionHandler: completionHandler) {
             joinedCompletionHandler()
         } else {
