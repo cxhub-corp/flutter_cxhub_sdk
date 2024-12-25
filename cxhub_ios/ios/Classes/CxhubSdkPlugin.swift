@@ -16,6 +16,8 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     var extensionContext: NSExtensionContext?
     
     var deviceTokenObserver: NSKeyValueObservation?
+    var isEmitPushToken: Bool = false
+    var isSubscribeToPushToken: Bool = false
     
     override init() {
         super.init()
@@ -25,17 +27,33 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
                 guard let newValue = change.newValue else {return}
                 if newValue != "" {
                     DispatchQueue.main.async {
-                        CxhubSdkPlugin._channel!.invokeMethod("emitPushToken", arguments: self.deviceToken)
+                        if self.isEmitPushToken {
+                            CxhubSdkPlugin._channel!.invokeMethod("emitPushToken", arguments: self.deviceToken)
+                            self.isEmitPushToken = false
+                        }
+                        if self.isSubscribeToPushToken {
+                            CxhubSdkPlugin._channel!.invokeMethod("emitPushTokenSub", arguments: self.deviceToken)
+                        }
                     }
                 }
             })
-            //Application.shared.registerForRemoteNotifications()
         }
     }
     
     deinit {
         deviceTokenObserver?.invalidate()
     }
+    
+    /* - Test channel messaging
+    private func emitSubGeneratorTest () {
+        self.tokenPrefix = self.tokenPrefix + 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            let newToken = "\(self.tokenPrefix)_" + self.deviceToken
+            CxhubSdkPlugin._channel!.invokeMethod("emitPushTokenSub", arguments: newToken)
+            self.emitSubGeneratorTest()
+        }
+    }
+    */
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         _channel = FlutterMethodChannel(name: "cxhub_sdk", binaryMessenger: registrar.messenger())
@@ -96,6 +114,13 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         case "getPushToken":
             self.getPushToken(result: result)
             break
+        case "subscribeToPushToken":
+            self.subscribeToPushToken(result: result)
+            break
+        case "unsubscribeToPushToken":
+            self.unsubscribeToPushToken(result: result)
+            break
+        
         case "getMobileInstance":
             self.getMobileInstance(result: result)
             break
@@ -133,6 +158,16 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
             result(FlutterMethodNotImplemented)
         }
     }
+    
+    public func subscribeToPushToken(result: @escaping FlutterResult) {
+        self.isSubscribeToPushToken = true
+        self.registerAndRetrievePushToken(result: result)
+    }
+    
+    public func unsubscribeToPushToken(result: @escaping FlutterResult) {
+        self.isSubscribeToPushToken = false
+        result("Unsubscribe succeeded")
+    }
 
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
@@ -163,6 +198,11 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     }
     
     public func getPushToken(result: @escaping FlutterResult) {
+        self.isEmitPushToken = true
+        self.registerAndRetrievePushToken(result: result)
+    }
+    
+    private func registerAndRetrievePushToken(result: @escaping FlutterResult) {
         if(deviceToken.isEmpty) {
             DispatchQueue.main.async {
                 Application.shared.registerForRemoteNotifications()
@@ -170,8 +210,16 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
             }
         }
         else {
-            CxhubSdkPlugin._channel!.invokeMethod("emitPushToken", arguments: self.deviceToken)
-            result("Device Token sent")
+            if self.isEmitPushToken {
+                CxhubSdkPlugin._channel!.invokeMethod("emitPushToken", arguments: self.deviceToken)
+                self.isEmitPushToken = false
+                result("Device Token sent (getPushToken)")
+            }
+            if self.isSubscribeToPushToken {
+                CxhubSdkPlugin._channel!.invokeMethod("emitPushTokenSub", arguments: self.deviceToken)
+                result("Device Token sent (subscribe)")
+            }
+        
         }
     }
     
