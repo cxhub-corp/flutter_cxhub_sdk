@@ -9,20 +9,25 @@ import 'cxhub_sdk_platform.dart';
 mixin CxHubSdkMixin {
   /// The method channel used to interact with the native platform.
   @visibleForTesting
-  late final methodChannel = const MethodChannel('cxhub_sdk')..setMethodCallHandler(_handlePlatformInvokes);
+  late final methodChannel = const MethodChannel('cxhub_sdk')
+    ..setMethodCallHandler(_handlePlatformInvokes);
 
   StreamController<String?>? _pushController;
   Completer<String?>? _pushCompleter;
   Completer<MapEntry<String, String>?>? _userIdCompleter;
   Completer? _setUserPropsCompleter;
+  Completer<PermissionResult>? _permissionCompleter;
+  Completer<PermissionResult>? _checkCompleter;
 
   void init({String? param}) {
     methodChannel.invokeMethod('init', param);
   }
 
-  Future<String?> getPlatformVersion() => methodChannel.invokeMethod<String>('getPlatformVersion');
+  Future<String?> getPlatformVersion() =>
+      methodChannel.invokeMethod<String>('getPlatformVersion');
 
-  Future<String?> getMobileInstance() => methodChannel.invokeMethod<String>('getMobileInstance');
+  Future<String?> getMobileInstance() =>
+      methodChannel.invokeMethod<String>('getMobileInstance');
 
   Future<String?> getPushToken() {
     _pushCompleter ??= Completer<String>();
@@ -89,6 +94,30 @@ mixin CxHubSdkMixin {
     return future;
   }
 
+  Future<PermissionResult> requestPermission() {
+    _permissionCompleter ??= Completer<PermissionResult>();
+    final future = _permissionCompleter!.future;
+
+    methodChannel.invokeMethod('requestPermission').onError((e, s) {
+      _permissionCompleter?.completeError(e!, s);
+      _permissionCompleter = null;
+    });
+
+    return future;
+  }
+
+  Future<PermissionResult> checkPermission() {
+    _checkCompleter ??= Completer<PermissionResult>();
+    final future = _checkCompleter!.future;
+
+    methodChannel.invokeMethod('checkPermission').onError((e, s) {
+      _checkCompleter?.completeError(e!, s);
+      _checkCompleter = null;
+    });
+
+    return future;
+  }
+
   Future collectEvent(
     String key,
     String? value,
@@ -118,7 +147,8 @@ mixin CxHubSdkMixin {
           _userIdCompleter = null;
         } else {
           final map = call.arguments as Map<dynamic, dynamic>;
-          _userIdCompleter?.complete(MapEntry(map['idType']! as String, map['idValue']! as String));
+          _userIdCompleter?.complete(
+              MapEntry(map['idType']! as String, map['idValue']! as String));
           _userIdCompleter = null;
         }
         break;
@@ -138,6 +168,21 @@ mixin CxHubSdkMixin {
           _setUserPropsCompleter?.completeError('${map["message"]} $end');
           _setUserPropsCompleter = null;
         }
+        break;
+
+      case 'emitPermissionResult':
+        _permissionCompleter?.complete(
+          PermissionResult.values.byName(call.arguments),
+        );
+        _permissionCompleter = null;
+
+        break;
+
+      case 'emitCheckResult':
+        _checkCompleter?.complete(
+          PermissionResult.values.byName(call.arguments),
+        );
+        _checkCompleter = null;
         break;
 
       default:

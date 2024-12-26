@@ -42,4 +42,16 @@ abstract class CxHubSdkPlatform extends PlatformInterface {
 
   Future collectEvent(String key, String? value, Map<String, String>? properties, bool deliverImmediately) =>
       throw UnimplementedError('collectEvent() has not been implemented.');
+
+  Future<PermissionResult> checkPermission() =>
+      throw UnimplementedError('requestPermission() has not been implemented.');
+
+  Future<PermissionResult> requestPermission() =>
+      throw UnimplementedError('requestPermission() has not been implemented.');
+}
+
+enum PermissionResult {
+  notGranted,
+  denied,
+  granted,
 }

@@ -30,6 +30,12 @@ dependencies:
     hosted: https://onepub.dev/api/ndfuuhnofl
     version: ^0.0.3
 
+dependency_overrides:
+  cxhub_platform_interface:
+    path: ../cxhub_platform_interface
+  cxhub_android:
+    path: ../cxhub_android_firebase
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
