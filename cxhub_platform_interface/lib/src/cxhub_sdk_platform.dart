@@ -29,8 +29,6 @@ abstract class CxHubSdkPlatform extends PlatformInterface {
   Stream<String?> subscribeToPushToken() =>
       throw UnimplementedError('subscribeToPushToken() has not been implemented.');
 
-  Future unsubscribeToPushToken() => throw UnimplementedError('unsubscribeToPushToken() has not been implemented.');
-
   Future<MapEntry<String, String>?> getUserId() =>
       throw UnimplementedError('getUserId() has not been implemented.');
 
