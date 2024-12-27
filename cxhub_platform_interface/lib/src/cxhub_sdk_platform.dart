@@ -1,5 +1,5 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 
 abstract class CxHubSdkPlatform extends PlatformInterface {
   CxHubSdkPlatform() : super(token: _token);
@@ -49,10 +49,15 @@ abstract class CxHubSdkPlatform extends PlatformInterface {
           Map<String, String>? properties, bool deliverImmediately) =>
       throw UnimplementedError('collectEvent() has not been implemented.');
 
-  //iOS
-  Future<void> requestPushNotificationPermission() => throw UnimplementedError(
-      'registerForPushNotifications() has not been implemented.');
+  Future<PermissionResult> checkPermission() =>
+      throw UnimplementedError('requestPermission() has not been implemented.');
 
-  Future<void> registerDevice() =>
-      throw UnimplementedError('registerDevice() has not been implemented.');
+  Future<PermissionResult> requestPermission() =>
+      throw UnimplementedError('requestPermission() has not been implemented.');
+}
+
+enum PermissionResult {
+  unknown,
+  denied,
+  granted,
 }

@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'dart:io';
+//import 'dart:io';
 
 import 'package:cxhub_sdk/cxhub_sdk.dart';
 import 'package:cxhub_sdk_example/widgets/login_field.dart';
 import 'package:cxhub_sdk_example/widgets/property_field.dart';
 import 'package:cxhub_sdk_example/widgets/simple_field.dart';
 import 'package:cxhub_sdk_example/widgets/event_field.dart';
+import 'package:cxhub_sdk_example/widgets/toast_builder.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,7 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const NotificationToastBuilder();
     return Scaffold(
       appBar: AppBar(
         title: const Text('CxHubSDK Example App'),
@@ -163,6 +165,13 @@ class MainScreen extends StatelessWidget {
                 });
               },
             ),
+            MaterialButton(
+                child: const Text("Send event"),
+                onPressed: () {
+                  CxHubSdk.collectEvent("CustomEvent",
+                      deliverImmediately: true);
+                }),
+            const NotificationToastBuilder(),
           ],
         ),
       ),

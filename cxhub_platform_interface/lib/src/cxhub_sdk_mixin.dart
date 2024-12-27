@@ -1,9 +1,8 @@
 import 'dart:async';
 
-//import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:io' show Platform;
 
 import 'cxhub_sdk_platform.dart';
 
@@ -18,19 +17,11 @@ mixin CxHubSdkMixin {
   Completer<String?>? _pushCompleter;
   Completer<MapEntry<String, String>?>? _userIdCompleter;
   Completer? _setUserPropsCompleter;
+  Completer<PermissionResult>? _permissionCompleter;
+  Completer<PermissionResult>? _checkCompleter;
 
   void init({String? param}) {
     methodChannel.invokeMethod('init', param);
-    //if (Platform.isIOS) {
-    //  requestPushNotificationPermission().then((value) async {
-    //   registerDevice();
-    // });
-    //}
-    if (Platform.isIOS) {
-      requestPushNotificationPermission().then((value) async {
-        //   registerDevice();
-      });
-    }
   }
 
   Future<String?> getPlatformVersion() =>
@@ -104,6 +95,30 @@ mixin CxHubSdkMixin {
     return future;
   }
 
+  Future<PermissionResult> requestPermission() {
+    _permissionCompleter ??= Completer<PermissionResult>();
+    final future = _permissionCompleter!.future;
+
+    methodChannel.invokeMethod('requestPermission').onError((e, s) {
+      _permissionCompleter?.completeError(e!, s);
+      _permissionCompleter = null;
+    });
+
+    return future;
+  }
+
+  Future<PermissionResult> checkPermission() {
+    _checkCompleter ??= Completer<PermissionResult>();
+    final future = _checkCompleter!.future;
+
+    methodChannel.invokeMethod('checkPermission').onError((e, s) {
+      _checkCompleter?.completeError(e!, s);
+      _checkCompleter = null;
+    });
+
+    return future;
+  }
+
   Future collectEvent(
     String key,
     String? value,
@@ -156,28 +171,25 @@ mixin CxHubSdkMixin {
         }
         break;
 
+      case 'emitPermissionResult':
+        _permissionCompleter?.complete(
+          PermissionResult.values.byName(call.arguments),
+        );
+        _permissionCompleter = null;
+
+        break;
+
+      case 'emitCheckResult':
+        _checkCompleter?.complete(
+          PermissionResult.values.byName(call.arguments),
+        );
+        _checkCompleter = null;
+        break;
+
       default:
         return Future.error('${call.method}() not implemented!');
     }
 
     return "success";
-  }
-
-  //iOS
-
-  Future<void> requestPushNotificationPermission() async {
-    try {
-      await methodChannel.invokeMethod("requestNotificationPermissions");
-    } on PlatformException catch (e) {
-      throw PlatformException(message: e.message, code: e.code);
-    }
-  }
-
-  Future<void> registerDevice() async {
-    try {
-      await methodChannel.invokeMethod("registerForPushNotifications");
-    } on PlatformException catch (e) {
-      throw PlatformException(message: e.message, code: e.code);
-    }
   }
 }

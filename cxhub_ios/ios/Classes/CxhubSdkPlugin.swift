@@ -105,8 +105,11 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         case "getPlatformVersion":
             result("iOS " + UIDevice.current.systemVersion)
             break
-        case "requestNotificationPermissions":
-            self.requestNotificationPermissions(result: result)
+        case "requestPermission":
+            self.requestPermission(result: result)
+            break
+        case "checkPermission":
+            self.checkPermission(result: result)
             break
         case "registerForPushNotifications":
             self.registerForPushNotifications(application: application, result: result)
@@ -182,13 +185,52 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     }
     
     
-    private func requestNotificationPermissions(result: @escaping FlutterResult) {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if let error = error {
-                result(FlutterError(code: "PERMISSION_ERROR", message: "Failed to request permissions", details: error.localizedDescription))
-                return
+    private func requestPermission(result: @escaping FlutterResult) {
+        DispatchQueue.main.async {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                if let error = error {
+                    result(FlutterError(code: "PERMISSION_ERROR", message: "Failed to request permissions", details: error.localizedDescription))
+                    CxhubSdkPlugin._channel!.invokeMethod("emitPermissionResult", arguments: "unknown")
+                    return
+                }
+                var resultString: String = "unknown"
+                
+                switch granted {
+                case true:
+                    resultString = "granted"
+                    break
+                case false:
+                    resultString = "denied"
+                    break
+                }
+                
+                CxhubSdkPlugin._channel!.invokeMethod("emitPermissionResult", arguments: resultString)
+                result(resultString)
             }
-            result(granted)
+        }
+    }
+    
+    public func checkPermission(result: @escaping FlutterResult) {
+        DispatchQueue.main.async {
+            UNUserNotificationCenter.current().getNotificationSettings { settings in
+                var settingsStateString: String = "notDetermined"
+                switch settings.authorizationStatus {
+                case .authorized:
+                    settingsStateString = "granted"//"authorized"
+                    break
+                case .ephemeral:
+                    settingsStateString = "granted"//"ephemeral"
+                    break
+                case .provisional:
+                    settingsStateString = "granted"//"provisional"
+                    break
+                default:
+                    settingsStateString = "unknown"//"notDetermined"
+                    break
+                }
+                CxhubSdkPlugin._channel!.invokeMethod("emitCheckResult", arguments: settingsStateString)
+                result(settingsStateString)
+            }
         }
     }
     
@@ -204,11 +246,40 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     
     private func registerAndRetrievePushToken(result: @escaping FlutterResult) {
         if(deviceToken.isEmpty) {
-            DispatchQueue.main.async {
-                Application.shared.registerForRemoteNotifications()
-                result("DeviceToken registration initiated")
-            }
-        }
+            //DispatchQueue.main.async {
+                //UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound, .carPlay]) { (granted, error) in
+                //    if let error = error {
+                //        NSLog("Something was wrong: \(error)")
+                //    } else if !granted {
+                //        NSLog("Push notifications disabled")
+                //    }
+                    
+                    //Anyway try to register, checking notifications settings first
+                    DispatchQueue.main.async {
+                        UNUserNotificationCenter.current().getNotificationSettings { settings in
+                            switch settings.authorizationStatus {
+                            case .authorized:
+                                DispatchQueue.main.async {
+                                    Application.shared.registerForRemoteNotifications()
+                                    result("DeviceToken registration initiated. Authorized")
+                                }
+                                break
+                            //case .ephemeral:
+                            //    break
+                            //case .provisional:
+                            //    break
+                            default:
+                                NSLog("User didn't give you permissions for notifications, but you still may register to receive notifications in silent mode")
+                                DispatchQueue.main.async {
+                                    Application.shared.registerForRemoteNotifications()
+                                    result("DeviceToken registration initiated. Unknown")
+                                }
+                            }
+                        }
+                    }
+                }
+            //}
+        //}
         else {
             if self.isEmitPushToken {
                 CxhubSdkPlugin._channel!.invokeMethod("emitPushToken", arguments: self.deviceToken)
