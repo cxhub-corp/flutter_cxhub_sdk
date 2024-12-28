@@ -16,7 +16,6 @@ class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const NotificationToastBuilder();
     return Scaffold(
       appBar: AppBar(
         title: const Text('CxHubSDK Example App'),

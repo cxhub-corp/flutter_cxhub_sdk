@@ -213,7 +213,7 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
     public func checkPermission(result: @escaping FlutterResult) {
         DispatchQueue.main.async {
             UNUserNotificationCenter.current().getNotificationSettings { settings in
-                var settingsStateString: String = "notDetermined"
+                var settingsStateString: String = "unknown"
                 switch settings.authorizationStatus {
                 case .authorized:
                     settingsStateString = "granted"//"authorized"
@@ -223,6 +223,9 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
                     break
                 case .provisional:
                     settingsStateString = "granted"//"provisional"
+                    break
+                case .denied:
+                    settingsStateString = "denied"//"denied"
                     break
                 default:
                     settingsStateString = "unknown"//"notDetermined"
