@@ -113,7 +113,7 @@ class CxHubSdk {
 }
 
 enum PostNotificationPermission {
-  notGranted,
+  unknown,
   denied,
   granted,
 }

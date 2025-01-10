@@ -281,7 +281,7 @@ class CxHubSdkPluginCommon(
                                 MainScope().launch {
                                     channel.invokeMethod(
                                         "emitPermissionResult",
-                                        if (needRationale) "notGranted" else "denied",
+                                        if (needRationale) "unknown" else "denied",
                                         ResultCallback("CxHubPlugin", "emitPermissionResult")
                                     )
                                 }
@@ -322,7 +322,7 @@ class CxHubSdkPluginCommon(
                     MainScope().launch {
                         channel.invokeMethod(
                             "emitCheckResult",
-                            if (isGranted) "granted" else if (isNeedRationale || !wasRequested) "notGranted" else "denied",
+                            if (isGranted) "granted" else if (isNeedRationale || !wasRequested) "unknown" else "denied",
                             ResultCallback("CxHubPlugin", "emitCheckResult")
                         )
                     }
