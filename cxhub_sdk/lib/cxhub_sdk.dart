@@ -100,18 +100,26 @@ class CxHubSdk {
       CxHubSdkPlatform.instance
           .collectEvent(key, value, properties, deliverImmediately);
 
-
+  /// [Method] check permission
+  /// returns [PostNotificationPermission] with current permission status
   static Future<PostNotificationPermission> checkPermission() =>
       CxHubSdkPlatform.instance.checkPermission().then((value) =>
           PostNotificationPermission
               .values[PermissionResult.values.indexOf(value)]);
 
+  /// [Method] request permission
+  /// returns [PostNotificationPermission] with result of permission
+  /// request
   static Future<PostNotificationPermission> requestPermission() =>
       CxHubSdkPlatform.instance.requestPermission().then((value) =>
           PostNotificationPermission
               .values[PermissionResult.values.indexOf(value)]);
 }
 
+/// [Enum] status of post notification permission
+/// * unknown - can be responded
+/// * denied - can't be responded (user need to open settings to get it granted)
+/// * granted - granted
 enum PostNotificationPermission {
   unknown,
   denied,
