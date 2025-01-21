@@ -6,3 +6,6 @@
 
 ## 0.0.3-firebase
 * Update permissions
+
+## 0.0.4-firebase
+* update docs

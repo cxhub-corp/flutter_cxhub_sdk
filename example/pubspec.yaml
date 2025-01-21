@@ -1,6 +1,6 @@
 name: cxhub_sdk_example
 description: "Demonstrates how to use the cxhub_sdk plugin."
-version: 0.0.2
+version: 0.0.3
 publish_to: https://onepub.dev/api/ndfuuhnofl
 homepage: https://gitlab.corp.mail.ru/cxhub1/flutter-sdk
 repository: https://gitlab.corp.mail.ru/cxhub1/flutter-sdk
@@ -13,21 +13,22 @@ dependencies:
     sdk: flutter
   cxhub_sdk:
     hosted: https://onepub.dev/api/ndfuuhnofl
-    version: ^0.0.3
+    version: ^0.0.4
   cupertino_icons: ^1.0.6
   permission_handler: ^11.3.1
 
 ## Uncomment needed part to switch to huawei|rustore implementation
 ## default is firebase
-dependency_overrides:
-  cxhub_sdk:
-    path: ../cxhub_sdk
-  cxhub_android:
-    path: ../cxhub_android_firebase
-  cxhub_ios:
-    path: ../cxhub_ios
-  cxhub_platform_interface:
-    path: ../cxhub_platform_interface
+#dependency_overrides:
+#  cxhub_sdk:
+#    path: ../cxhub_sdk
+#  cxhub_android:
+#    path: ../cxhub_android_firebase
+#  cxhub_ios:
+#    path: ../cxhub_ios
+#  cxhub_platform_interface:
+#    path: ../cxhub_platform_interface
+
 #  cxhub_android:
 #    hosted: https://onepub.dev/api/ndfuuhnofl
 #    version: 0.0.2-huawei

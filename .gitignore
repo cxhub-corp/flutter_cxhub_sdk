@@ -37,3 +37,4 @@ build/
 /cxhub_android_rustore/android/gradle/wrapper/gradle-wrapper.jar
 /cxhub_android_rustore/android/gradle/wrapper/gradle-wrapper.properties
 /example/pubspec.lock
+/example/android/app/.cxx/

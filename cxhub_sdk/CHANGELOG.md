@@ -7,3 +7,7 @@
 ## 0.0.3
 * Update permissions
 * Fix push stream error
+
+## 0.0.4
+* Update docs
+* Add actual iOS implementation

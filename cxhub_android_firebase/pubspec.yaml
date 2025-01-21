@@ -1,6 +1,6 @@
 name: cxhub_android
 description: Android platform implementation for cxhub_sdk"
-version: 0.0.3-firebase
+version: 0.0.4-firebase
 publish_to: https://onepub.dev/api/ndfuuhnofl
 homepage: https://gitlab.corp.mail.ru/cxhub1/flutter-sdk
 repository: https://gitlab.corp.mail.ru/cxhub1/flutter-sdk
@@ -23,7 +23,7 @@ dependencies:
     sdk: flutter
   cxhub_platform_interface:
     hosted: https://onepub.dev/api/ndfuuhnofl
-    version: ^0.0.3
+    version: ^0.0.4
 
 
 dev_dependencies:

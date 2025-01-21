@@ -6,3 +6,6 @@
 
 ## 0.0.3-huawei
 * Update permissions
+
+## 0.0.4-huawei
+* update docs
