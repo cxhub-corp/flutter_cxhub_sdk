@@ -119,7 +119,52 @@ plugins {
 
 ### iOS
 
+Для интеграции CxHubSdk в iOS-часть приложения, необходимо произвести следующие действия 
 
+В общей части проекта: 
+- установить\добавить во Flutter-проект плагин cxhub_sdk
+- проверить, что в pubspec.yaml вашего проекта есть следуюший код:
+
+```yaml
+dependencies:
+  # ...
+  cxhub_sdk: 0.0.1
+#dependency_overrides:
+#  cxhub_android: 0.0.1-huawei
+#  cxhub_android: 0.0.1-rustore
+# ...
+  cxhub_ios:
+    hosted: https://onepub.dev/api/ndfuuhnofl/ # здесь должна быть ссылка на pub.dev
+    version: ^0.0.4 #последняя актуальная версия
+```
+
+В платформенной части (.../ios):
+
+- изменить\модифицировать настройки (вкладка "Signing & Capabilities") основного таргета:
+  Добавить следующие "Capabilities":
+  - App Groups (идентификатор общей группы должен соответствовать вашему приложению, он будет использован ниже и для extensions)
+  - Communication Notifications
+  - Push Notifications
+
+  ![Добавить "Capabilities"](../cxhub_ios/readme_resources/add_capabilities.png)
+
+- добавить 2 модуля-extension(s): NotificationService(Extension), ContentExtension
+
+Добавляем и конфигурируем NotificationService extension (добавляем новый таргет):
+![Добавить "NotificationService (extension)"](../cxhub_ios/readme_resources/add_notification_service_1.png)
+![Задать имя "ServiceExtension"](../cxhub_ios/readme_resources/add_notification_service_2.png)
+![Активировать](../cxhub_ios/readme_resources/add_notification_service_3.png)
+![Добавить "Capabilities"](../cxhub_ios/readme_resources/add_capabilities_to_NS.png)
+
+Добавляем и конфигурируем ContentExtension (добавляем новый таргет):
+![Добавить "ContentExtension (extension)"](../cxhub_ios/readme_resources/add_ContentExtension_1.png)
+![Задать имя "ContentExtension"](../cxhub_ios/readme_resources/add_ContentExtension_2.png)
+![Активировать](../cxhub_ios/readme_resources/add_ContentExtension_3.png)
+![Добавить "Capabilities"](../cxhub_ios/readme_resources/add_capabilities_to_ContentExtension.png)
+
+Во всех модулях проекта и таргетов устанавливаем минимальную версию iOS >= 14.0 (это требование cxhub_sdk (ioS), которая использует iOS 14+):
+![Workspace deployment target](../cxhub_ios/readme_resources/workspace_deployment_target.png)
+![Extension minimum deployment](../cxhub_ios/readme_resources/extension_deployment_target.png)
 
 ### Инициализация
 Для инициализации сдк с использованием Firebase или Huawei добавьте следующий код в функцию main:
