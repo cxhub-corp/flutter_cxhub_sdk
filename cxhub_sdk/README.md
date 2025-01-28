@@ -283,9 +283,9 @@ dependencies:
 ```
 
 - модифицируем (заполняем своими параметрами) Root -> LibNotify -> Application:
- -- ApiUrlHost: <базовый URL проекта в CxHub>/callback-service/  (пример: https://vgktest.cxhub.ru/callback-service/ )
- -- IntegrationId: идентификатор интеграции в CxHub (получаем из настроек интеграции в Web интерфейсе личного кабинета CxHub)
- -- Secret: секрет интеграции в CxHub (получаем из настроек интеграции в Web интерфейсе личного кабинета CxHub)
+ - ApiUrlHost: <базовый URL проекта в CxHub>/callback-service/  (пример: https://vgktest.cxhub.ru/callback-service/ )
+ - IntegrationId: идентификатор интеграции в CxHub (получаем из настроек интеграции в Web интерфейсе личного кабинета CxHub)
+ - Secret: секрет интеграции в CxHub (получаем из настроек интеграции в Web интерфейсе личного кабинета CxHub)
 
  - модифицируем (заполняем своими параметрами) Root -> SharedGroupId :  ваш идентификатор shared_group для приложения
 
