@@ -183,9 +183,13 @@ dependencies:
 
   Во всех модулях проекта и таргетов устанавливаем минимальную версию iOS >= 14.0 (это требование cxhub_sdk (ioS), которая использует iOS 14+):
   - Workspace deployment target
+
 ![Workspace deployment target](../cxhub_ios/readme_resources/workspace_deployment_target.png)
+
   - Extension minimum deployment
+
 ![Extension minimum deployment](../cxhub_ios/readme_resources/extension_deployment_target.png)
+
 
 Далее переходим на основной таргет приложения, вкладка "Build Phases" и меняем последовательность фаз так, чтобы "Thin Binary" оказалась ниже(!) "Embed Foundation Extensions"
 
@@ -482,6 +486,70 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
 
 ![сontent_extension_storyboard](../cxhub_ios/readme_resources/сontent_extension_storyboard.png)
 
+Закрываем workspace и редактируем Podfile:
+
+```dart
+
+# Uncomment this line to define a global platform for your project
+platform :ios, '14.0'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+target 'ServiceExtension' do
+  use_frameworks!
+  use_modular_headers!
+  flutter_install_ios_engine_pod File.dirname(File.realpath(__FILE__))
+  pod 'cxhub_ios', path: '.symlinks/plugins/cxhub_ios/ios'
+end
+
+target 'ContentExtension' do
+  use_frameworks!
+  use_modular_headers!
+  flutter_install_ios_engine_pod File.dirname(File.realpath(__FILE__))
+  pod 'cxhub_ios', path: '.symlinks/plugins/cxhub_ios/ios'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end
+
+```
 
 ### Инициализация
 Для инициализации сдк с использованием Firebase или Huawei добавьте следующий код в функцию main:
