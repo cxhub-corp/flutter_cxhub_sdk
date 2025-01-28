@@ -191,10 +191,7 @@ dependencies:
 ![Extension minimum deployment](../cxhub_ios/readme_resources/extension_deployment_target.png)
 
 
-Далее переходим на основной таргет приложения, вкладка "Build Phases" и меняем последовательность фаз так, чтобы "Thin Binary" оказалась ниже(!) "Embed Foundation Extensions"
-
-- Исходная последовательность:
-![arrange_build_phases_source](../cxhub_ios/readme_resources/arrange_build_phases_source.png)
+Далее переходим на основной таргет приложения, вкладка "Build Phases" и меняем последовательность фаз так, чтобы "Thin Binary" оказалась самой нижней фазой
 
 - Результат:
 ![arrange_build_phases_result](../cxhub_ios/readme_resources/arrange_build_phases_result.png)
