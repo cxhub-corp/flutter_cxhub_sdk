@@ -32,9 +32,15 @@ build/
 /example/android/app/src/google-services.json
 /example/android/app/src/main/res/values/cxhub.xml
 /example/android/app/local.properties
+/example/ios/Runner/Notify.plist
 /cxhub_android_rustore/android/gradlew
 /cxhub_android_rustore/android/gradlew.bat
 /cxhub_android_rustore/android/gradle/wrapper/gradle-wrapper.jar
 /cxhub_android_rustore/android/gradle/wrapper/gradle-wrapper.properties
 /example/pubspec.lock
 /example/android/app/.cxx/
+/cxhub_sdk/example/android/app/src/agconnect-services.json
+/cxhub_sdk/example/android/app/src/google-services.json
+/cxhub_sdk/example/android/app/local.properties
+/cxhub_sdk/example/android/app/src/main/res/values/cxhub.xml
+/cxhub_sdk/example/ios/Runner/Notify.plist

@@ -27,3 +27,8 @@ migrate_working_dir/
 **/doc/api/
 .dart_tool/
 build/
+/example/android/app/src/agconnect-services.json
+/example/android/app/src/google-services.json
+/example/android/app/local.properties
+/example/android/app/src/main/res/values/cxhub.xml
+/example/ios/Runner/Notify.plist
