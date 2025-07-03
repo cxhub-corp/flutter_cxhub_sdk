@@ -21,4 +21,7 @@ START /B /WAIT cmd /c "flutter pub get"
 cd ../example
 START /B /WAIT cmd /c "flutter clean"
 START /B /WAIT cmd /c "flutter pub get"
-cd ..
+cd ../cxhub_sdk/example
+START /B /WAIT cmd /c "flutter clean"
+START /B /WAIT cmd /c "flutter pub get"
+cd ../..

@@ -36,8 +36,16 @@ allprojects {
 }
 
 rootProject.buildDir = "../build"
+
+def exclude = [
+        "cxhub_android_firebase",
+        "cxhub_android_huawei",
+        "cxhub_android_rustore",
+]
+
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+    if (!exclude.contains(project.name))
+        project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
     project.evaluationDependsOn(":app")

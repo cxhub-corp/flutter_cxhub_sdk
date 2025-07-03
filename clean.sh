@@ -12,6 +12,7 @@ cd ../cxhub_ios
 flutter clean
 cd ../cxhub_sdk
 flutter clean
-cd ../example
-cd ..
+cd ./example
+flutter clean
+cd ../..
 

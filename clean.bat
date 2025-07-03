@@ -12,6 +12,7 @@ cd ../cxhub_ios
 START /B /WAIT cmd /c "flutter clean"
 cd ../cxhub_sdk
 START /B /WAIT cmd /c "flutter clean"
-cd ../example
-cd ..
+cd ./example
+START /B /WAIT cmd /c "flutter clean"
+cd ../..
 

@@ -1,12 +1,11 @@
 import 'dart:async';
-//import 'dart:io';
 
 import 'package:cxhub_sdk/cxhub_sdk.dart';
-import 'package:cxhub_sdk_example/widgets/login_field.dart';
-import 'package:cxhub_sdk_example/widgets/property_field.dart';
-import 'package:cxhub_sdk_example/widgets/simple_field.dart';
-import 'package:cxhub_sdk_example/widgets/event_field.dart';
-import 'package:cxhub_sdk_example/widgets/toast_builder.dart';
+import 'package:cxhub_sdk_example_local/widgets/login_field.dart';
+import 'package:cxhub_sdk_example_local/widgets/property_field.dart';
+import 'package:cxhub_sdk_example_local/widgets/simple_field.dart';
+import 'package:cxhub_sdk_example_local/widgets/event_field.dart';
+import 'package:cxhub_sdk_example_local/widgets/toast_builder.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

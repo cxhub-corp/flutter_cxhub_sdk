@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:cxhub_sdk_example/main.dart';
+import 'package:cxhub_sdk_example_local/main.dart';
 
 void main() {
   testWidgets('Verify Platform version', (WidgetTester tester) async {
