@@ -1,9 +1,9 @@
 name: cxhub_ios
 description: "CxHub iOS implementation"
 version: 0.0.1
-publish_to:
+
 homepage: https://cxhub.ru
-repository:
+repository: https://github.com/cxhub-corp/flutter_cxhub_sdk/tree/publish/cxhub_ios
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
