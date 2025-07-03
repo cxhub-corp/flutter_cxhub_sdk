@@ -13,7 +13,7 @@ flutter:
   plugin:
     platforms:
       ios:
-        pluginClass: CxHubSdkPlugin
+        pluginClass: CxhubSdkPlugin
         dartPluginClass: CxHubSdkPlatformIos
 
 dependencies:

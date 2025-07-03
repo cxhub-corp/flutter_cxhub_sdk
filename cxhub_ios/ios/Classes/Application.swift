@@ -2,7 +2,7 @@
 //  Application.swift
 //  cxhub_ios
 //
-//  Created by Vladimir Kukhar on 04.12.2024.
+//  Created by cxhub.mail.ru on 04.12.2024.
 //
 
 import Foundation

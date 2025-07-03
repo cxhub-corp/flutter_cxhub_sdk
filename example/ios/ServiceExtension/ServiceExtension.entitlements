@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.vgkukhar.libnotify</string>
+		<string>&lt;your_apple_app_group&gt;</string>
 	</array>
 </dict>
 </plist>

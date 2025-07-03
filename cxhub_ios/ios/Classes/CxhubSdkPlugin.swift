@@ -64,7 +64,6 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         if !CxhubSdkPlugin.apiIsInitialized {CxhubSdkPlugin.apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()}
         
         if !Bundle.main.bundlePath.hasSuffix(".appex") {
-            instance.addObservers()
             if apiIsInitialized {
                 CXHubSDKAPIBridge.getInstance.setDelegate(instance)
             }
@@ -329,67 +328,6 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         //Do here your application specific push processing logic.
         joinedCompletionHandler(.noData)
     }
-    
-    @nonobjc  func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-
-        if let joinedCompletionHandler = CXApp.performFetch(completionHandler: completionHandler) {
-            joinedCompletionHandler(.newData)
-        } else {
-            completionHandler(.newData)
-        }
-    }
-}
-
-// MARK: Add observers
-extension CxhubSdkPlugin {
-    private func addObservers () {
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationDidBecomeActive(_:)), name: UIApplication.didBecomeActiveNotification, object: Application.shared)
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationWillEnterForeground(_:)), name: UIApplication.willEnterForegroundNotification, object: Application.shared)
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationWillResignActive(_:)), name: UIApplication.willResignActiveNotification, object: Application.shared)
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationDidEnterBackground(_:)), name: UIApplication.didEnterBackgroundNotification, object: Application.shared)
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: Application.shared)
-        
-        NotificationCenter.default.addObserver(CxhubSdkPlugin.instance, selector: #selector(CxhubSdkPlugin.instance.applicationSignificantTimeChange(_:)), name: UIApplication.significantTimeChangeNotification, object: Application.shared)
-    }
-}
-
-// MARK: UIApplicationDelegate
-extension CxhubSdkPlugin  {   //UIApplicationDelegate
-
-    public func applicationWillEnterForeground(_ application: UIApplication) {
-        //Forward system call to CXHubSDK
-        CXApp.applicationWillEnterForeground(application)
-    }
-
-    public func applicationDidBecomeActive(_ application: UIApplication) {
-        //Forward system call to CXHubSDK
-        CXApp.applicationDidBecomeActive(application)
-    }
-
-    public func applicationWillResignActive(_ application: UIApplication) {
-        //Forward system call to CXHubSDK
-        CXApp.applicationWillResignActive(application)
-    }
-    
-    public func applicationDidEnterBackground(_ application: UIApplication) {
-        //Forward system call to CXHubSDK
-        CXApp.applicationDidEnterBackground(application)
-    }
-    
-    public func applicationWillTerminate(_ application: UIApplication) {
-        //Forward system call to CXHubSDK
-        CXApp.applicationWillTerminate(application)
-    }
-
-    public func applicationSignificantTimeChange(_ application: UIApplication) {
-        //Forward system call to CXHubSDK
-        CXApp.applicationSignificantTimeChange(application)
-    }
 }
 
 //MARK:  UNUserNotificationCenterDelegate
@@ -435,24 +373,6 @@ extension CxhubSdkPlugin: CXNotifyDelegate {
     }
     
     //MARK: @optional:
-
-    /**
-     You may implement this method in your class.
-     All incoming pushes with url will be tried to open url with this method.
-     If your implementation returns true handling of url will be completed
-     else logic will call method -[UIApplication openUrl:].
-     This method will be called in the main thread.
-     */
-    public func open(_ url: URL) -> Bool {
-        //Example implementation
-        let preferences = UserDefaults.standard
-        if(!preferences.bool(forKey: "CX_CatchDeepLink")) {
-            return false
-        }
-        let vc = UIAlertController(title: "App is handling url", message: url.absoluteString, preferredStyle: .alert)
-        Application.shared.delegate?.window??.rootViewController?.present(vc, animated: true, completion: nil)
-        return true;
-    }
 
     public var activityTitleFont: UIFont {
         let baseFont = UIFont.systemFont(ofSize: 24.0, weight: .heavy)
@@ -530,6 +450,12 @@ extension CxhubSdkPlugin : CXContentExtensionDelegate {
                 self.bigContentImage = UIImageView()
             }
             self.bigContentImage!.image = UIImage(data: attachmentData)
+            var xCoord = (self.bigContentImage!.superview!.frame.size.width - self.bigContentImage!.image!.size.width)/2.0
+            if(xCoord < 0) {
+                xCoord = 0.0
+            }
+            
+            self.bigContentImage!.frame = CGRect(x: xCoord, y: 0, width: self.bigContentImage!.image!.size.width, height: self.bigContentImage!.image!.size.height)
         }
     }
 }

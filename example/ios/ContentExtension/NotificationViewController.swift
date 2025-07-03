@@ -39,15 +39,14 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     override func viewDidLoad() {
         super.viewDidLoad()
         if self.bigContentImage == nil {
-            self.bigContentImage = UIImageView.init(frame: .zero)
-            self.bigContentImage!.contentMode = UIView.ContentMode.top
+            self.bigContentImage = UIImageView.init(frame: self.view.bounds)
             self.view.addSubview(self.bigContentImage!)
-            
             let constWidth:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.width, multiplier: 1, constant: 0);
             self.view.addConstraint(constWidth);
             
             let constHeight:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1, constant: 0);
             self.view.addConstraint(constHeight);
+             
             
             let constX:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0);
             self.view.addConstraint(constX);
@@ -55,23 +54,18 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
             let constY:NSLayoutConstraint = NSLayoutConstraint(item: self.bigContentImage!, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.view, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0);
             self.view.addConstraint(constY);
             
-            self.bigContentImage!.layer.borderColor = UIColor.red.cgColor
-            self.bigContentImage!.layer.borderWidth = 4.0
+            //self.bigContentImage!.layer.borderColor = UIColor.red.cgColor
+            //self.bigContentImage!.layer.borderWidth = 4.0
             
-            self.view!.layer.borderColor = UIColor.green.cgColor
-            self.view!.layer.borderWidth = 2.0
+            //self.view!.layer.borderColor = UIColor.green.cgColor
+            //self.view!.layer.borderWidth = 2.0
             
             //The following is the only call, which is required to initialize CXHubSDK correctly to work with ContentExtension
             //If you plan to use Storyboard for ContentExtension interface, then this call has to be made inside awakeFromNib() implementation (see above)
+            
             apiIsInitialized = CxhubSdkPlugin.initCXHubSdkWithContentExtensionImage(bigImage: self.bigContentImage!)
+            self.view.updateConstraints()
         }
-    }
-    
-    override func viewWillLayoutSubviews() {
-        self.bigContentImage!.frame = self.view.bounds
-        self.bigContentImage!.center = CGPoint(x: self.view.bounds.size.width/2.0, y: self.view.bounds.size.height/2.0)
-        self.view.updateConstraints()
-        super.viewWillLayoutSubviews()
     }
     
     func didReceive(_ notification: UNNotification) {

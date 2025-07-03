@@ -119,7 +119,438 @@ plugins {
 
 ### iOS
 
+Для интеграции CxHubSdk в iOS-часть приложения, необходимо произвести следующие действия 
 
+В общей части проекта: 
+- установить\добавить во Flutter-проект плагин cxhub_sdk
+- проверить, что в pubspec.yaml вашего проекта есть следуюший код:
+
+```yaml
+dependencies:
+  # ...
+  cxhub_sdk: 0.0.1
+#dependency_overrides:
+#  cxhub_android: 0.0.1-huawei
+#  cxhub_android: 0.0.1-rustore
+# ...
+  cxhub_ios:
+    hosted: https://onepub.dev/api/ndfuuhnofl/ # здесь должна быть ссылка на pub.dev
+    version: ^0.0.4 #последняя актуальная версия
+```
+
+В платформенной части (.../ios), открыв workspace с помощью XCode:
+
+- изменить\модифицировать настройки (вкладка "Signing & Capabilities") основного таргета:
+  Добавить следующие "Capabilities":
+  - App Groups (идентификатор общей группы должен соответствовать вашему приложению, он будет использован ниже и для extensions)
+  - Communication Notifications
+  - Push Notifications
+
+  Далее:
+
+  - Добавить "Capabilities"
+
+  ![Добавить "Capabilities"](../cxhub_ios/readme_resources/add_capabilities.png)
+
+  - добавить 2 модуля-extension(s): NotificationService(Extension), ContentExtension
+
+  Добавляем и конфигурируем NotificationService extension (добавляем новый таргет):
+  - Добавить "NotificationService (extension)"
+![Добавить "NotificationService (extension)"](../cxhub_ios/readme_resources/add_notification_service_1.png)
+
+  - Задать имя "ServiceExtension"
+![Задать имя "ServiceExtension"](../cxhub_ios/readme_resources/add_notification_service_2.png)
+
+  - Активировать
+![Активировать](../cxhub_ios/readme_resources/add_notification_service_3.png)
+
+  - Добавить "Capabilities" для NotificationService
+![Добавить "Capabilities"](../cxhub_ios/readme_resources/add_capabilities_to_NS.png)
+
+  Добавляем и конфигурируем ContentExtension (добавляем новый таргет):
+
+  - Добавить "ContentExtension (extension)"
+![Добавить "ContentExtension (extension)"](../cxhub_ios/readme_resources/add_ContentExtension_1.png)
+
+  - Задать имя "ContentExtension"
+![Задать имя "ContentExtension"](../cxhub_ios/readme_resources/add_ContentExtension_2.png)
+
+  - Активировать
+![Активировать](../cxhub_ios/readme_resources/add_ContentExtension_3.png)
+
+  - Добавить "Capabilities" для СontentExtension
+![Добавить "Capabilities"](../cxhub_ios/readme_resources/add_capabilities_to_ContentExtension.png)
+
+  Во всех модулях проекта и таргетов устанавливаем минимальную версию iOS >= 15.0 (это требование cxhub_sdk (ioS), которая использует iOS 15+):
+  - Workspace deployment target
+
+![Workspace deployment target](../cxhub_ios/readme_resources/workspace_deployment_target.png)
+
+  - Service Extension minimum deployment
+
+![Service Extension minimum deployment](../cxhub_ios/readme_resources/service_extension_deployment_target.png)
+
+  - Content Extension minimum deployment
+
+![Content Extension minimum deployment](../cxhub_ios/readme_resources/content_extension_deployment_target.png)
+
+
+Далее переходим на основной таргет приложения, вкладка "Build Phases" и меняем последовательность фаз так, чтобы "Thin Binary" оказалась самой нижней фазой
+
+- Результат:
+![arrange_build_phases_result](../cxhub_ios/readme_resources/arrange_build_phases_result.png)
+
+Далее:
+
+- Добавляем в проект файл Notify.plist следующего вида:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Enabled</key>
+	<true/>
+	<key>Debug</key>
+	<true/>
+	<key>LibNotify</key>
+	<dict>
+		<key>UNNotificationExtensionCategory</key>
+		<array>
+			<string>libnotify_default</string>
+			<string>libnotify_button_queue_1</string>
+			<string>libnotify_button_queue_2</string>
+			<string>libnotify_button_queue_3</string>
+			<string>libnotify_button_queue_4</string>
+			<string>libnotify_button_queue_5</string>
+		</array>
+		<key>Activity</key>
+		<dict>
+			<key>Colors</key>
+			<dict>
+				<key>BackgroundColor</key>
+				<dict>
+					<key>Dark</key>
+					<string>#030303</string>
+					<key>Light</key>
+					<string>#DDDDDD</string>
+				</dict>
+				<key>TextColor</key>
+				<dict>
+					<key>Dark</key>
+					<string>#DDDDDD</string>
+					<key>Light</key>
+					<string>#030303</string>
+				</dict>
+				<key>AccentColor</key>
+				<dict>
+					<key>Dark</key>
+					<string>#219653</string>
+					<key>Light</key>
+					<string>#219653</string>
+				</dict>
+				<key>ButtonTextColor</key>
+				<dict>
+					<key>Dark</key>
+					<string>#70D098</string>
+					<key>Light</key>
+					<string>#70D098</string>
+				</dict>
+				<key>CloseButtonColor</key>
+				<dict>
+					<key>Dark</key>
+					<string>#6FCF97</string>
+					<key>Light</key>
+					<string>#6FCF97</string>
+				</dict>
+				<key>DarkModeSupported</key>
+				<true/>
+			</dict>
+			<key>FontType</key>
+			<string>Custom</string>
+		</dict>
+		<key>Enabled</key>
+		<true/>
+		<key>Application</key>
+		<dict>
+			<key>ApiUrlHost</key>
+			<string>*YOUR_CXHUB_PROJECT_URL*</string>
+			<key>IntegrationId</key>
+			<string>*YOUR_CXHUB_INTEGRATION_ID*</string>
+			<key>Secret</key>
+			<string>*YOUR_CXHUB_INTEGRATION_SECRET*</string>
+		</dict>
+	</dict>
+	<key>SharedGroupId</key>
+	<string>*YOUR_APPLE_SHARED_GROUP_ID*</string>
+</dict>
+</plist>
+```
+
+- модифицируем (заполняем своими параметрами) Root -> LibNotify -> Application:
+ - ApiUrlHost: <базовый URL проекта в CxHub>/callback-service/  (пример: https://vgktest.cxhub.ru/callback-service/ )
+ - IntegrationId: идентификатор интеграции в CxHub (получаем из настроек интеграции в Web интерфейсе личного кабинета CxHub)
+ - Secret: секрет интеграции в CxHub (получаем из настроек интеграции в Web интерфейсе личного кабинета CxHub)
+
+ - модифицируем (заполняем своими параметрами) Root -> SharedGroupId :  ваш идентификатор shared_group для приложения
+
+*Важно*: параметр *Root -> Debug* по умолчанию установлен *True*, в релизной сборке приложения его необходимо установить *False*
+
+Остальные параметры оставляем без изменений.
+
+Файл *Notify.plist* описывает основные настройки для SDK, поэтому в "Target Membership" у него *обязательно* должен быть включены "галочки" для всех таргетов приложения (основной, ServiceExtension, ContentExtension)
+
+![notify_plist_target_membership](../cxhub_ios/readme_resources/notify_plist_target_membership.png)
+
+Далее модифицируем Appdelegate.swift (добавляем необходимые для работы SDK вызовы):
+
+```swift
+
+import Flutter
+import UIKit
+import cxhub_ios
+
+@main
+@objc class AppDelegate: FlutterAppDelegate {
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        GeneratedPluginRegistrant.register(with: self)
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+    
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        CxhubSdkPlugin.instance.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+        return super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
+    }
+    
+    override func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        CxhubSdkPlugin.instance.application(application, didFailToRegisterForRemoteNotificationsWithError: error)
+        return super.application(application, didFailToRegisterForRemoteNotificationsWithError: error)
+    }
+}
+
+```
+
+Добавляем\модифицируем NotificationService.swift:
+
+```swift
+import UserNotifications
+import cxhub_ios
+import CXHubCore
+import CXHubNotify
+
+class NotificationService: UNNotificationServiceExtension {
+    
+    var contentHandler: ((UNNotificationContent) -> Void)?
+    var bestAttemptContent: UNMutableNotificationContent?
+    private var apiIsInitialized :  Bool = false
+    
+    override init() {
+        apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()
+    }
+    
+    override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+        self.contentHandler = contentHandler
+        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+        
+        if let bestAttemptContent = bestAttemptContent {
+            if apiIsInitialized {
+                if CxhubSdkPlugin.didReceive(request, withContentHandler: contentHandler) {
+                    return
+                }
+                else {
+                    contentHandler(bestAttemptContent)
+                }
+            }
+            
+            else {
+                contentHandler(bestAttemptContent)
+            }
+        }
+    }
+    
+    override func serviceExtensionTimeWillExpire() {
+        if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
+            if apiIsInitialized {
+                if CxhubSdkPlugin.serviceExtensionTimeWillExpire() {
+                    return
+                }
+                else {
+                    contentHandler(bestAttemptContent)
+                }
+            }
+            
+            else {
+                contentHandler(bestAttemptContent)
+            }
+        }
+    }
+    
+}
+```
+
+Модифицируем NotificationViewController.swift (модуль\папка ContentExtension):
+
+```swift
+
+import UIKit
+import UserNotifications
+import UserNotificationsUI
+import cxhub_ios
+import CXHubNotify
+
+class NotificationViewController: UIViewController, UNNotificationContentExtension {
+    
+    private var apiIsInitialized :  Bool = false
+
+    @IBOutlet var bigContentImage: UIImageView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        apiIsInitialized = CxhubSdkPlugin.initCXHubSdkWithContentExtensionImage(bigImage: self.bigContentImage)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any required interface initialization here.
+    }
+    
+    func didReceive(_ notification: UNNotification) {
+        self.label?.text = notification.request.content.body
+    }
+    
+    func didReceive(_ notification: UNNotification) {
+        //This variant is for CxhubSdkPlugin as CXContentExtensionDelegate
+        let processed = apiIsInitialized && CxhubSdkPlugin.instance.didReceive(notification)
+        
+        if (!processed) {
+            //Do some custom logic with a particular notification as it is not originated from CXHubSDK API.
+        }
+        
+    }
+    
+    func didReceive(_ response: UNNotificationResponse, completionHandler completion: @escaping (UNNotificationContentExtensionResponseOption) -> Void) {
+        if apiIsInitialized {
+            if !CxhubSdkPlugin.instance.didReceive(response, context: self.extensionContext, completionHandler: completion) {
+                //Catch action with UNNotificationContentExtensionResponseOption yourself
+            }
+        }
+        else {
+            //Catch action with UNNotificationContentExtensionResponseOption yourself, cause CXHubSDK wasn't initialized correctly
+        }
+    }
+    
+}
+
+```
+
+Файл Info.plist для ContentExtension модифицируем следующим образом:
+
+```xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionAttributes</key>
+		<dict>
+			<key>UNNotificationExtensionCategory</key>
+			<array>
+				<string>libnotify_default</string>
+				<string>libnotify_button</string>
+				<string>libnotify_button_queue_1</string>
+				<string>libnotify_button_queue_2</string>
+				<string>libnotify_button_queue_3</string>
+				<string>libnotify_button_queue_4</string>
+				<string>libnotify_button_queue_5</string>
+			</array>
+			<key>UNNotificationExtensionInitialContentSizeRatio</key>
+			<integer>0</integer>
+		</dict>
+		<key>NSExtensionMainStoryboard</key>
+		<string>MainInterface</string>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.usernotifications.content-extension</string>
+	</dict>
+</dict>
+</plist>
+
+
+```
+Кроме этого в ContentExtension добавляем UIImageView на View для NotificationViewController в MainInterface.storyboard, устанавливаем для него необходимые constraints, и связываем его со свойством *bigContentImage*:
+
+пример:
+
+![сontent_extension_storyboard](../cxhub_ios/readme_resources/сontent_extension_storyboard.png)
+
+Закрываем workspace и редактируем Podfile:
+
+```dart
+
+# Uncomment this line to define a global platform for your project
+platform :ios, '15.0'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+target 'ServiceExtension' do
+  use_frameworks!
+  use_modular_headers!
+  flutter_install_ios_engine_pod File.dirname(File.realpath(__FILE__))
+  pod 'cxhub_ios', path: '.symlinks/plugins/cxhub_ios/ios'
+end
+
+target 'ContentExtension' do
+  use_frameworks!
+  use_modular_headers!
+  flutter_install_ios_engine_pod File.dirname(File.realpath(__FILE__))
+  pod 'cxhub_ios', path: '.symlinks/plugins/cxhub_ios/ios'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    flutter_additional_ios_build_settings(target)
+  end
+end
+
+```
 
 ### Инициализация
 Для инициализации сдк с использованием Firebase или Huawei добавьте следующий код в функцию main:

@@ -1,12 +1,12 @@
 PODS:
   - cxhub_ios (0.0.1):
-    - CXHubSDK (= 3.0.00)
+    - CXHubSDK (= 3.0.01)
     - Flutter
-  - CXHubSDK (3.0.00):
-    - CXHubSDK/Core (= 3.0.00)
-    - CXHubSDK/Notify (= 3.0.00)
-  - CXHubSDK/Core (3.0.00)
-  - CXHubSDK/Notify (3.0.00):
+  - CXHubSDK (3.0.01):
+    - CXHubSDK/Core (= 3.0.01)
+    - CXHubSDK/Notify (= 3.0.01)
+  - CXHubSDK/Core (3.0.01)
+  - CXHubSDK/Notify (3.0.01):
     - CXHubSDK/Core
   - Flutter (1.0.0)
   - integration_test (0.0.1):
@@ -35,12 +35,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
-  cxhub_ios: 38738797bedb63923b98c7f3a4b9be1911e6b606
-  CXHubSDK: ccb6d30655d42b2c09c2c4fc8bcba8d42ad04ff3
+  cxhub_ios: 836610521a8ac4dfd9ead4f103f14b6001372917
+  CXHubSDK: e7675a9fac2b653bc027268585d3bfd8adb3ee6e
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
 
-PODFILE CHECKSUM: 2d1b595350cdb28f605e1aaaba217f8bd25096cb
+PODFILE CHECKSUM: 5e2e6cf17f02011fe6b96121e43e9f226439f67f
 
 COCOAPODS: 1.16.2
