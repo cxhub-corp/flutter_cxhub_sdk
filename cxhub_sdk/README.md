@@ -488,7 +488,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
 ```dart
 
 # Uncomment this line to define a global platform for your project
-platform :ios, '14.0'
+platform :ios, '15.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'

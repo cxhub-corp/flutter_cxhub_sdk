@@ -69,7 +69,7 @@
 			<key>ApiUrlHost</key>
 			<string>https://vgktest.cxhub.ru/callback-service/</string>
 			<key>IntegrationId</key>
-			<string>4b8eb311-fcda-40d0-8482-8adf394c92ac</string>
+			<string>a36a095c-cb1d-44d8-8ea0-e1a951b4f164</string>
 			<key>Secret</key>
 			<string>eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0eXBlIjoibW9iaWxlIiwicHJvamVjdF9uYW1lIjoidmdrdGVzdCJ9.7IBOhhC_ZlBSMGWQr_ETs2CCUfpwy6TKdhD7jha-3wY</string>
 		</dict>
