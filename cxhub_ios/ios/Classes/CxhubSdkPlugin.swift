@@ -64,7 +64,6 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         if !CxhubSdkPlugin.apiIsInitialized {CxhubSdkPlugin.apiIsInitialized = CxhubSdkPlugin.initCXHubSDK()}
         
         if !Bundle.main.bundlePath.hasSuffix(".appex") {
-            //instance.addObservers() - deprecated
             if apiIsInitialized {
                 CXHubSDKAPIBridge.getInstance.setDelegate(instance)
             }
@@ -451,6 +450,12 @@ extension CxhubSdkPlugin : CXContentExtensionDelegate {
                 self.bigContentImage = UIImageView()
             }
             self.bigContentImage!.image = UIImage(data: attachmentData)
+            var xCoord = (self.bigContentImage!.superview!.frame.size.width - self.bigContentImage!.image!.size.width)/2.0
+            if(xCoord < 0) {
+                xCoord = 0.0
+            }
+            
+            self.bigContentImage!.frame = CGRect(x: xCoord, y: 0, width: self.bigContentImage!.image!.size.width, height: self.bigContentImage!.image!.size.height)
         }
     }
 }
