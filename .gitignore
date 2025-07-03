@@ -44,3 +44,4 @@ build/
 /cxhub_sdk/example/android/app/local.properties
 /cxhub_sdk/example/android/app/src/main/res/values/cxhub.xml
 /cxhub_sdk/example/ios/Runner/Notify.plist
+.vscode/
