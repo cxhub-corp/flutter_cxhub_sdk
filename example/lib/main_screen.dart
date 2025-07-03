@@ -1,5 +1,4 @@
 import 'dart:async';
-//import 'dart:io';
 
 import 'package:cxhub_sdk/cxhub_sdk.dart';
 import 'package:cxhub_sdk_example/widgets/login_field.dart';
@@ -44,50 +43,6 @@ class MainScreen extends StatelessWidget {
                     ),
                   ),
             ),
-            /*Platform.isIOS
-                ? FutureBuilder(
-                    //future: CxHubSdk.retriveDeviceToken().catchError((e) async {
-                    //  debugPrint("retriveDeviceToken error $e");
-                    //  return "ERROR";
-                    //}),
-                    future: CxHubSdk.getPushToken().catchError((e) async {
-                      debugPrint("getPushToken error $e");
-                      return "ERROR";
-                    }),
-                    builder: (context, token) => SimpleField(
-                      name: "Push token",
-                      actionName: "Copy",
-                      action: () => Clipboard.setData(
-                          ClipboardData(text: token.data ?? "")),
-                      child: Text(
-                        overflow: TextOverflow.ellipsis,
-                        token.data ?? "",
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  )
-                : StreamBuilder(
-                    stream: CxHubSdk.subscribeToPushToken().transform(
-                        StreamTransformer<String, String>.fromHandlers(
-                      handleData: (data, sink) => sink.add(data),
-                      handleError: (e, s, sink) {
-                        debugPrint("subscribeToPushToken error $e");
-                        sink.add("ERROR");
-                      },
-                    )),
-                    builder: (context, pushToken) => SimpleField(
-                      name: "Push token",
-                      actionName: "Copy",
-                      action: () => Clipboard.setData(
-                          ClipboardData(text: pushToken.data ?? "")),
-                      child: Text(
-                        overflow: TextOverflow.ellipsis,
-                        pushToken.data ?? "",
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ),
-            */
             StreamBuilder(
               stream: CxHubSdk.subscribeToPushToken().asBroadcastStream().transform(
                   StreamTransformer<String, String>.fromHandlers(

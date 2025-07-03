@@ -1,9 +1,7 @@
-name: cxhub_sdk_example
+name: cxhub_sdk_example_local
 description: "Demonstrates how to use the cxhub_sdk plugin."
-version: 0.0.3
-publish_to: https://onepub.dev/api/ndfuuhnofl
-homepage: https://gitlab.corp.mail.ru/cxhub1/flutter-sdk
-repository: https://gitlab.corp.mail.ru/cxhub1/flutter-sdk
+version: 0.0.1
+publish_to: none
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -11,9 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cxhub_sdk:
-    hosted: https://onepub.dev/api/ndfuuhnofl
-    version: ^0.0.4
+  cxhub_sdk: ^0.0.1
   cupertino_icons: ^1.0.6
   permission_handler: ^11.3.1
 
@@ -23,6 +19,7 @@ dependency_overrides:
   cxhub_platform_interface:
     path: ../../cxhub_platform_interface
   cxhub_android:
+    ## change "_firebase" to "_huawei" or "_rustore" for local build
     path: ../../cxhub_android_firebase
   cxhub_ios:
     path: ../../cxhub_ios

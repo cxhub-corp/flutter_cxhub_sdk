@@ -133,9 +133,7 @@ dependencies:
 #  cxhub_android: 0.0.1-huawei
 #  cxhub_android: 0.0.1-rustore
 # ...
-  cxhub_ios:
-    hosted: https://onepub.dev/api/ndfuuhnofl/ # здесь должна быть ссылка на pub.dev
-    version: ^0.0.4 #последняя актуальная версия
+  cxhub_ios: ^0.0.1
 ```
 
 В платформенной части (.../ios), открыв workspace с помощью XCode:
