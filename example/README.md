@@ -30,7 +30,7 @@ flutter.ndkVersion=26.3.11579264
 ```
 
 ### iOS
-в терминале переходим в папку проекта (ios), запускаем:
+В терминале переходим в папку проекта (ios), запускаем:
 pod deintegrate
 pod repo update
 pod update (или pod install)
