@@ -1,7 +1,9 @@
 name: cxhub_android
-description: "Android RuStore implementation cxhub_sdk"
-version: 0.0.1
-publish_to: 'none'
+description: "Android platform implementation for cxhub_sdk"
+version: 0.0.1-rustore
+
+homepage: https://cxhub.ru
+repository: https://github.com/cxhub-corp/flutter_cxhub_sdk/tree/publish/cxhub_android_rustore
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -19,8 +21,7 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  cxhub_platform_interface:
-    path: ../cxhub_platform_interface
+  cxhub_platform_interface: ^0.0.1
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 name: cxhub_sdk_example
 description: "Demonstrates how to use the cxhub_sdk plugin."
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 0.0.1
+publish_to: none
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -8,14 +9,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cxhub_sdk:
-    path: ../cxhub_sdk
+  cxhub_sdk: ^0.0.1
   cupertino_icons: ^1.0.6
+  permission_handler: ^12.0.1
 
-# Uncomment this to switch to huawei implementation
-dependency_overrides:
-  cxhub_android:
-    path: ../cxhub_android_rustore
+## Uncomment needed part to switch to huawei|rustore implementation
+## default is firebase
+#dependency_overrides:
+  #cxhub_android: 0.0.1-huawei
+  #cxhub_android: 0.0.1-rustore
 
 dev_dependencies:
   integration_test:

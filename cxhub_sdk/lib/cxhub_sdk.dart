@@ -25,24 +25,103 @@ class CxHubSdk {
     return _instance!;
   }
 
-  static Future<String?> getPlatformVersion() => CxHubSdkPlatform.instance.getPlatformVersion();
+  /// Init SDK [method] with optional [String? param]
+  /// * [param] is [null] by default, and using only for [RuStore] implementation
+  /// to define RuStore [projectId]
+  ///
+  /// Using:
+  /// ```dart
+  /// void main() {
+  ///   WidgetsFlutterBinding.ensureInitialized();
+  ///   CxHubSdk.init(); // <<<
+  ///   CxHubSdk.collectEvent("AppCreate");
+  ///   runApp(const MyApp());
+  /// }
+  /// ```
+  static void init({String? param}) =>
+      CxHubSdkPlatform.instance.init(param: param);
 
-  static Future<String?> getMobileInstance() => CxHubSdkPlatform.instance.getMobileInstance();
+  /// Default platform version [method] return [Future<String?>]
+  /// [String] contains platform and FCM|HMS|RuStore transport implementation
+  /// for Android
+  static Future<String?> getPlatformVersion() =>
+      CxHubSdkPlatform.instance.getPlatformVersion();
 
-  static Future<String?> getPushToken() => CxHubSdkPlatform.instance.getPushToken();
+  /// [Method] returns mobile instance id of SDK client
+  ///
+  /// Mobile instance id define client device while not logged in.
+  /// When logged in it define current user's device.
+  static Future<String?> getMobileInstance() =>
+      CxHubSdkPlatform.instance.getMobileInstance();
 
-  static Stream<String?> subscribeToPushToken() => CxHubSdkPlatform.instance.subscribeToPushToken();
+  /// [Method] returns push token
+  ///
+  /// You can get push token of current transport implementation for test purposes.
+  /// Token string  can be null when sdk not initialized on the first run
+  static Future<String?> getPushToken() =>
+      CxHubSdkPlatform.instance.getPushToken();
 
-  static Future unsubscribeToPushToken() => CxHubSdkPlatform.instance.unsubscribeToPushToken();
+  /// [Method] subscribes to push token of current transport implementation for test purposes.
+  ///
+  /// You can subscribe push token of current transport implementation for test purposes and get updates of it when it changes.
+  /// Token string can be null when sdk not initialized on the first run
+  static Stream<String?> subscribeToPushToken() =>
+      CxHubSdkPlatform.instance.subscribeToPushToken();
 
-  static Future<MapEntry<String, String>?> getUserId() => CxHubSdkPlatform.instance.getUserId();
+  /// [Method] returns [MapEntry<String, String>?] where:
+  /// * [key] is type of user id (Phone|Email|any unique param from personal profile)
+  /// * [value] is user id value itself
+  ///
+  /// Can be null when not set, use [CxHubSdk.setUserId(String userIdType, String userIdValue)]
+  static Future<MapEntry<String, String>?> getUserId() =>
+      CxHubSdkPlatform.instance.getUserId();
 
+  /// [Method] set user id [type] and [value]
+  /// * [userIdType] - Phone|Email|any unique param from personal profile
+  /// * [value] is user id value itself
   static Future setUserId(String userIdType, String userIdValue) =>
       CxHubSdkPlatform.instance.setUserId(userIdType, userIdValue);
 
+  /// [Method] set any user properties
+  /// * [Map<String, String> properties] - bundle of any user properties in cxhub project settings
   static Future setUserProperties(Map<String, String> properties) =>
       CxHubSdkPlatform.instance.setUserProperties(properties);
 
-  static Future collectEvent(String key, {String? value, Map<String, String>? properties, bool deliverImmediately = false}) =>
-      CxHubSdkPlatform.instance.collectEvent(key, value, properties, deliverImmediately);
+  /// [Method] send custom user event
+  /// * [String key] - event type (for example AppCreate)
+  /// * [String? value] - additional value for event (optional)
+  /// * [Map<String, String>? properties] - additional properties for event (optional)
+  /// * [bool deliverImmediately] - when "true" SDK try to send event immediately,
+  /// otherwise send with bunch of other events by inner timer
+  static Future collectEvent(String key,
+          {String? value,
+          Map<String, String>? properties,
+          bool deliverImmediately = false}) =>
+      CxHubSdkPlatform.instance
+          .collectEvent(key, value, properties, deliverImmediately);
+
+  /// [Method] check permission
+  /// returns [PostNotificationPermission] with current permission status
+  static Future<PostNotificationPermission> checkPermission() =>
+      CxHubSdkPlatform.instance.checkPermission().then((value) =>
+          PostNotificationPermission
+              .values[PermissionResult.values.indexOf(value)]);
+
+  /// [Method] request permission
+  /// returns [PostNotificationPermission] with result of permission
+  /// request
+  static Future<PostNotificationPermission> requestPermission() =>
+      CxHubSdkPlatform.instance.requestPermission().then((value) =>
+          PostNotificationPermission
+              .values[PermissionResult.values.indexOf(value)]);
+}
+
+/// [Enum] status of post notification permission
+/// * unknown - can be responded
+/// * denied - can't be responded (user need to open settings to get it granted)
+/// * granted - granted
+enum PostNotificationPermission {
+  unknown,
+  denied,
+  granted,
 }

@@ -8,13 +8,16 @@ flutter pub get
 cd ../cxhub_android_huawei
 flutter clean
 flutter pub get
+cd ../cxhub_android_rustore
+flutter clean
+flutter pub get
 cd ../cxhub_ios
 flutter clean
 flutter pub get
 cd ../cxhub_sdk
 flutter clean
 flutter pub get
-cd ../example
+cd ./example
 flutter pub get
-cd ..
+cd ../..
 

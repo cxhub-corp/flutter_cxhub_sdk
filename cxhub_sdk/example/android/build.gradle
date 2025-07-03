@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        mavenLocal()
+        maven{
+            url "https://developer.huawei.com/repo/"
+        }
+        maven {
+            url "https://artifactory-external.vkpartner.ru/artifactory/maven"
+        }
+    }
+
+    dependencies {
+        classpath("com.google.gms:google-services:4.4.2")
+        classpath("com.huawei.agconnect:agcp:1.9.1.302")
+    }
+}
+
+allprojects {
+    String storageUrl = System.env.FLUTTER_STORAGE_BASE_URL ?: "https://storage.googleapis.com"
+    repositories {
+        google()
+        mavenCentral()
+        mavenLocal()
+        maven {
+            url "$storageUrl/download.flutter.io"
+        }
+        maven{
+            url "https://developer.huawei.com/repo/"
+        }
+        maven {
+            url "https://artifactory-external.vkpartner.ru/artifactory/maven"
+        }
+    }
+}
+
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

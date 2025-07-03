@@ -1,7 +1,9 @@
 name: cxhub_ios
 description: "CxHub iOS implementation"
 version: 0.0.1
-publish_to: 'none'
+
+homepage: https://cxhub.ru
+repository: https://github.com/cxhub-corp/flutter_cxhub_sdk/tree/publish/cxhub_ios
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
@@ -11,15 +13,13 @@ flutter:
   plugin:
     platforms:
       ios:
-        pluginClass: CxHubSdkPlatformIos
+        pluginClass: CxhubSdkPlugin
         dartPluginClass: CxHubSdkPlatformIos
 
 dependencies:
   flutter:
     sdk: flutter
-  cxhub_platform_interface:
-    path: ../cxhub_platform_interface
-
+  cxhub_platform_interface: ^0.0.1
 
 dev_dependencies:
   flutter_test:

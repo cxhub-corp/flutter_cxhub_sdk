@@ -4,6 +4,7 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
     id "com.google.gms.google-services"
+    //id "com.huawei.agconnect"
 }
 
 def localProperties = new Properties()
@@ -14,21 +15,29 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
+def gradleProperties = new Properties()
+def gradlePropertiesFile = rootProject.file("gradle.properties")
+if (gradlePropertiesFile.exists()) {
+    gradlePropertiesFile.withReader("UTF-8") { reader ->
+        gradleProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = gradleProperties.getProperty("flutter.versionCode")
 if (flutterVersionCode == null) {
     flutterVersionCode = "1"
 }
 
-def flutterVersionName = localProperties.getProperty("flutter.versionName")
+def flutterVersionName = gradleProperties.getProperty("flutter.versionName")
 if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
 
 android {
-    namespace = "ru.mail"
-    compileSdk = localProperties.getProperty("flutter.compileSdkVersion").toInteger()
-    ndkVersion = localProperties.getProperty("flutter.ndkVersion")
+    namespace = "ru.cxhub"
+    compileSdk = gradleProperties.getProperty("flutter.compileSdkVersion").toInteger()
+    ndkVersion = gradleProperties.getProperty("flutter.ndkVersion")
 
     kotlinOptions{
         jvmTarget = "17"
@@ -41,20 +50,17 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "ru.mail.android_libnotify_app_test"
+        applicationId = "ru.cxhub.example"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = localProperties.getProperty("flutter.minSdkVersion").toInteger() //flutter.minSdkVersion
-        targetSdk = localProperties.getProperty("flutter.targetSdkVersion").toInteger()
+        minSdk = gradleProperties.getProperty("flutter.minSdkVersion").toInteger() //flutter.minSdkVersion
+        targetSdk = gradleProperties.getProperty("flutter.targetSdkVersion").toInteger()
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.debug
         }
     }
