@@ -181,14 +181,18 @@ dependencies:
   - Добавить "Capabilities" для СontentExtension
 ![Добавить "Capabilities"](../cxhub_ios/readme_resources/add_capabilities_to_ContentExtension.png)
 
-  Во всех модулях проекта и таргетов устанавливаем минимальную версию iOS >= 14.0 (это требование cxhub_sdk (ioS), которая использует iOS 14+):
+  Во всех модулях проекта и таргетов устанавливаем минимальную версию iOS >= 15.0 (это требование cxhub_sdk (ioS), которая использует iOS 15+):
   - Workspace deployment target
 
 ![Workspace deployment target](../cxhub_ios/readme_resources/workspace_deployment_target.png)
 
-  - Extension minimum deployment
+  - Service Extension minimum deployment
 
-![Extension minimum deployment](../cxhub_ios/readme_resources/extension_deployment_target.png)
+![Service Extension minimum deployment](../cxhub_ios/readme_resources/service_extension_deployment_target.png)
+
+  - Content Extension minimum deployment
+
+![Content Extension minimum deployment](../cxhub_ios/readme_resources/content_extension_deployment_target.png)
 
 
 Далее переходим на основной таргет приложения, вкладка "Build Phases" и меняем последовательность фаз так, чтобы "Thin Binary" оказалась самой нижней фазой
