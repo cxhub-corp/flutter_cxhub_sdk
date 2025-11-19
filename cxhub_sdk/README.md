@@ -14,15 +14,15 @@
 dependencies:
   # ...
   cxhub_sdk: 0.0.1
-#dependency_overrides:
+  
+dependency_overrides:
+  cxhub_android: 0.0.1-firebase
 #  cxhub_android: 0.0.1-huawei
 #  cxhub_android: 0.0.1-rustore
 # ...
 ```
 
-Для использования дефолтной реализации пуш-уведомлений для Android через Firebase не требуется переопределения зависимостей. 
-
-Для использования Huawei или Rustore уведомлений необходимо раскомментировать нужный пункт. 
+Для использования Huawei или Rustore уведомлений необходимо раскомментировать нужный пункт и закомментировать ненужный. 
 То есть переход на нужную имплементацию для Android реализован как переопределение версии Android-модуля сдк.
 
 Для iOS используется только APNs.
@@ -129,7 +129,9 @@ plugins {
 dependencies:
   # ...
   cxhub_sdk: 0.0.1
-#dependency_overrides:
+  
+dependency_overrides:
+  cxhub_android: 0.0.1-firebase
 #  cxhub_android: 0.0.1-huawei
 #  cxhub_android: 0.0.1-rustore
 # ...
