@@ -67,14 +67,14 @@ class MainScreen extends StatelessWidget {
                   ),
             ),
             LoginField(
-              name: "UserId (Phone)",
+              name: "UserId (Email)",
               actionName: "Send",
               initial: CxHubSdk.getUserId().catchError((e) {
                 debugPrint("getUserId error $e");
                 return const MapEntry("ERROR", "ERROR");
               }),
               action: (phone) {
-                CxHubSdk.setUserId("Phone", phone).catchError((e) {
+                CxHubSdk.setUserId("Email", phone).catchError((e) {
                   debugPrint("setUserId error $e");
                 });
               },

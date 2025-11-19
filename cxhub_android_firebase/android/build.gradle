@@ -48,6 +48,8 @@ android {
     }
 
     dependencies {
+        compileOnly("io.flutter:flutter_embedding_debug:1.0.0-edd8546116457bdf1c5bdfb13ecb9463d2bb5ed4")
+
         implementation("com.google.firebase:firebase-messaging:25.0.1")
 
         implementation("ru.mail.libnotify:cxhub-firebase:0.1.0")

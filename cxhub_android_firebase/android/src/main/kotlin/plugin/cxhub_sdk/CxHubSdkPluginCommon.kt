@@ -24,6 +24,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 
 const val PREFS_NAME = "CxHubSdkPluginPrefs"
@@ -45,6 +46,7 @@ class CxHubSdkPluginCommon(
     }
 
     fun initSdk(param: String?) {
+        Log.d("CxhHubSdkPlugin","init CxHubFirebase implementation...")
         manager = managerFactory.invoke(param)
         NotificationFactory.setPlatformManagers(manager)
         NotificationFactory.initialize(context)
@@ -59,6 +61,7 @@ class CxHubSdkPluginCommon(
         }
 
         NotificationFactory.bootstrap(context)
+        Log.d("CxhHubSdkPlugin","CxHubFirebasePlugin inited")
     }
 
     private var pushListener: PushTokenListener? = null
@@ -90,11 +93,16 @@ class CxHubSdkPluginCommon(
                 "getPushToken" -> {
                     api.getPushToken { token ->
                         MainScope().launch {
-                            channel.invokeMethod(
-                                "emitPushToken",
-                                token,
-                                ResultCallback("CxHubSdkPlugin", "emitPushToken")
-                            )
+                            if (token == null)
+                                Log.d("CxHubSdkPlugin", "token is null")
+
+                            token?.let {
+                                channel.invokeMethod(
+                                    "emitPushToken",
+                                    token,
+                                    ResultCallback("CxHubSdkPlugin", "emitPushToken")
+                                )
+                            }
                         }
                     }
 
@@ -109,11 +117,16 @@ class CxHubSdkPluginCommon(
                     } else {
                         pushListener = PushTokenListener {
                             MainScope().launch {
-                                channel.invokeMethod(
-                                    "emitPushTokenSub",
-                                    it,
-                                    ResultCallback("CxHubSdkPlugin", "emitPushTokenSub")
-                                )
+                                if (it == null)
+                                    Log.d("CxHubSdkPlugin", "token is null")
+
+                                it?.let {
+                                    channel.invokeMethod(
+                                        "emitPushTokenSub",
+                                        it,
+                                        ResultCallback("CxHubSdkPlugin", "emitPushTokenSub")
+                                    )
+                                }
                             }
                         }
 
