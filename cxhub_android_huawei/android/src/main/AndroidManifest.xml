@@ -1,5 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
   package="plugin.cxhub_sdk">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -9,13 +8,11 @@
 
     <application>
         <service
-                android:name="cxhub.api.CxHubHuaweiMessagingService"
-                tools:replace="android:exported,android:enabled"
-                android:exported="true"
+                android:name="plugin.cxhub_sdk.CxSdkHmsMessageService"
+                android:exported="false"
                 android:enabled="true">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
     </application>
