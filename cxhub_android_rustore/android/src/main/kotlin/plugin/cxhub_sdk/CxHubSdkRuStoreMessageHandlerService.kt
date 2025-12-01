@@ -5,26 +5,38 @@ import org.json.JSONObject
 import ru.rustore.sdk.pushclient.messaging.exception.RuStorePushClientException
 import ru.rustore.sdk.pushclient.messaging.model.RemoteMessage
 import ru.rustore.sdk.pushclient.messaging.service.RuStoreMessagingService
+import cxhub.api.NotificationFactory
+import cxhub.api.PlatformManager
 
 class CxHubSdkRuStoreMessageHandlerService: RuStoreMessagingService() {
     override fun onNewToken(token: String) {
-        Log.d(LOG_TAG, "onNewToken token = $token")
-        PlatformInternalFactory.getMessageHandler()?.onNewToken(this, token)
+        if (isCurrentPlatform()) {
+            Log.v(LOG_TAG, "token refresh. onNewToken: $token")
+            NotificationFactory.refreshPushToken(this)
+        } else {
+            Log.w(LOG_TAG, "Ignore refresh token : $token")
+        }
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
         val data = message.data
-        Log.d(LOG_TAG, String.format("onMessageReceived with %s", data))
-
         val dataStr = data["data"]
         if (dataStr.isNullOrEmpty()) {
             Log.d(LOG_TAG, "Remote message is null or empty, ignore")
             return
         }
         val dataMap = JSONObject(dataStr).toMap()
-        PlatformInternalFactory.getMessageHandler()?.onMessageReceived(this, dataMap)
+
+        if (isCurrentPlatform()) {
+            Log.d(LOG_TAG, String.format("onMessageReceived deliver with %s", data))
+            NotificationFactory.deliverPushMessageIntent(this, dataMap)
+        } else {
+            Log.w(LOG_TAG, "Ignore message with data $data")
+        }
     }
 
+    private fun isCurrentPlatform() =
+        NotificationFactory.getPlatformName() == PlatformManager.PLATFORM_RUSTORE
     private fun JSONObject.toMap(): Map<String, String> =
         keys().asSequence().associateWith { this[it].toString() }
 

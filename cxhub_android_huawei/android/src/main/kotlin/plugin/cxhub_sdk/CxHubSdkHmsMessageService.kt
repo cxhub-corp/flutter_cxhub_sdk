@@ -8,18 +8,26 @@ import cxhub.api.PlatformManager
 
 class CxSdkHmsMessageService : HmsMessageService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        super.onMessageReceived(remoteMessage)
         val data = remoteMessage.dataOfMap
-        Log.d(LOG_TAG, String.format("onMessageReceived with %s", data))
-        //!!!
-        PlatformInternalFactory.getMessageHandler()?.onMessageReceived(this, data)
+        if (isCurrentPlatform()) {
+            NotificationFactory.deliverPushMessageIntent(this, data)
+        } else {
+            Log.w(LOG_TAG, "Ignore message with data $data")
+        }
     }
 
     override fun onNewToken(token: String) {
-        Log.d(LOG_TAG, String.format("onNewToken %s", token))
-        //!!!
-        PlatformInternalFactory.getMessageHandler()?.onNewToken(this, token)
+        if (isCurrentPlatform()) {
+            Log.v(LOG_TAG, "token refresh. onNewToken: $token")
+            NotificationFactory.refreshPushToken(this)
+        } else {
+            Log.w(LOG_TAG, "Ignore refresh token : $token")
+        }
     }
 
+    private fun isCurrentPlatform() =
+        NotificationFactory.getPlatformName() == PlatformManager.PLATFORM_HUAWEI
     override fun onDestroy() {
         Log.v(LOG_TAG, "service destroyed")
     }
