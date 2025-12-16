@@ -189,7 +189,9 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
                 if let error = error {
                     result(FlutterError(code: "PERMISSION_ERROR", message: "Failed to request permissions", details: error.localizedDescription))
-                    CxhubSdkPlugin._channel!.invokeMethod("emitPermissionResult", arguments: "unknown")
+                    DispatchQueue.main.async {
+                        CxhubSdkPlugin._channel!.invokeMethod("emitPermissionResult", arguments: "unknown")
+                    }
                     return
                 }
                 var resultString: String = "unknown"
@@ -202,9 +204,10 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
                     resultString = "denied"
                     break
                 }
-                
-                CxhubSdkPlugin._channel!.invokeMethod("emitPermissionResult", arguments: resultString)
-                result(resultString)
+                DispatchQueue.main.async {
+                    CxhubSdkPlugin._channel!.invokeMethod("emitPermissionResult", arguments: resultString)
+                    result(resultString)
+                }
             }
         }
     }
@@ -230,8 +233,10 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
                     settingsStateString = "unknown"//"notDetermined"
                     break
                 }
-                CxhubSdkPlugin._channel!.invokeMethod("emitCheckResult", arguments: settingsStateString)
-                result(settingsStateString)
+                DispatchQueue.main.async {
+                    CxhubSdkPlugin._channel!.invokeMethod("emitCheckResult", arguments: settingsStateString)
+                    result(settingsStateString)
+                }
             }
         }
     }
@@ -284,13 +289,17 @@ public class CxhubSdkPlugin: NSObject, FlutterPlugin, FlutterApplicationLifeCycl
         //}
         else {
             if self.isEmitPushToken {
-                CxhubSdkPlugin._channel!.invokeMethod("emitPushToken", arguments: self.deviceToken)
-                self.isEmitPushToken = false
-                result("Device Token sent (getPushToken)")
+                DispatchQueue.main.async {
+                    CxhubSdkPlugin._channel!.invokeMethod("emitPushToken", arguments: self.deviceToken)
+                    self.isEmitPushToken = false
+                    result("Device Token sent (getPushToken)")
+                }
             }
             if self.isSubscribeToPushToken {
-                CxhubSdkPlugin._channel!.invokeMethod("emitPushTokenSub", arguments: self.deviceToken)
-                result("Device Token sent (subscribe)")
+                DispatchQueue.main.async {
+                    CxhubSdkPlugin._channel!.invokeMethod("emitPushTokenSub", arguments: self.deviceToken)
+                    result("Device Token sent (subscribe)")
+                }
             }
         
         }
