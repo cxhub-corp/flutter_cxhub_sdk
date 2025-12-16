@@ -13,12 +13,12 @@
 ```yaml
 dependencies:
   # ...
-  cxhub_sdk: 0.0.1
+  cxhub_sdk: 0.0.2
   
 dependency_overrides:
-  cxhub_android: 0.0.1-firebase
-#  cxhub_android: 0.0.1-huawei
-#  cxhub_android: 0.0.1-rustore
+  cxhub_android: 0.0.2-firebase
+#  cxhub_android: 0.0.2-huawei
+#  cxhub_android: 0.0.2-rustore
 # ...
 ```
 
@@ -128,14 +128,14 @@ plugins {
 ```yaml
 dependencies:
   # ...
-  cxhub_sdk: 0.0.1
+  cxhub_sdk: 0.0.2
   
 dependency_overrides:
-  cxhub_android: 0.0.1-firebase
-#  cxhub_android: 0.0.1-huawei
-#  cxhub_android: 0.0.1-rustore
+  cxhub_android: 0.0.2-firebase
+#  cxhub_android: 0.0.2-huawei
+#  cxhub_android: 0.0.2-rustore
 # ...
-  cxhub_ios: ^0.0.1
+  cxhub_ios: ^0.0.2
 ```
 
 В платформенной части (.../ios), открыв workspace с помощью XCode:

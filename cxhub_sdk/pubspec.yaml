@@ -1,6 +1,6 @@
 name: cxhub_sdk
 description: "CxHub SDK library"
-version: 0.0.1
+version: 0.0.2
 
 homepage: https://cxhub.ru/
 repository: https://github.com/cxhub-corp/flutter_cxhub_sdk/tree/publish/cxhub_sdk
@@ -21,8 +21,8 @@ dependencies:
   flutter:
     sdk: flutter
   cxhub_platform_interface: ^0.0.1
-  cxhub_android: ^0.0.1-firebase
-  cxhub_ios: ^0.0.1
+  cxhub_android: ^0.0.2-firebase
+  cxhub_ios: ^0.0.2
 
 dev_dependencies:
   flutter_test:
