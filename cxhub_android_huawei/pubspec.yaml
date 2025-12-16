@@ -1,6 +1,6 @@
 name: cxhub_android
 description: "Android platform implementation for cxhub_sdk"
-version: 0.0.1-huawei
+version: 0.0.2-huawei
 
 homepage: https://cxhub.ru
 repository: https://github.com/cxhub-corp/flutter_cxhub_sdk/tree/publish/cxhub_android_huawei

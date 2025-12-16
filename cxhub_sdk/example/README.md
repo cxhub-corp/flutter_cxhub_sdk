@@ -23,10 +23,10 @@
 В android/gradle.properties добавить следующие строки (изменить версии на актуальные):
 
 ```toml
-flutter.minSdkVersion=23
-flutter.targetSdkVersion=35
-flutter.compileSdkVersion=35
-flutter.ndkVersion=26.3.11579264  
+flutter.minSdkVersion=24
+flutter.targetSdkVersion=36
+flutter.compileSdkVersion=36
+flutter.ndkVersion=27.0.12077973
 ```
 
 ### iOS

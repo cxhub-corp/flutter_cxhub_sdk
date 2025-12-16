@@ -24,10 +24,6 @@ dependencies:
   cxhub_android: ^0.0.1-firebase
   cxhub_ios: ^0.0.1
 
-#dependency_overrides:
-#  cxhub_android: 0.0.1-huawei
-#  cxhub_android: 0.0.1-rustore
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

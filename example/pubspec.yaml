@@ -14,10 +14,10 @@ dependencies:
   permission_handler: ^12.0.1
 
 ## Uncomment needed part to switch to huawei|rustore implementation
-## default is firebase
-#dependency_overrides:
-  #cxhub_android: 0.0.1-huawei
-  #cxhub_android: 0.0.1-rustore
+dependency_overrides:
+  cxhub_android: 0.0.2-firebase
+  #cxhub_android: 0.0.2-huawei
+  #cxhub_android: 0.0.2-rustore
 
 dev_dependencies:
   integration_test:
